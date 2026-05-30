@@ -292,7 +292,7 @@ footer span { white-space: nowrap; }
     <a href="mission.html"><i class="fa-solid fa-bullseye"></i> Mission</a>
     <a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a>
     <a href="contact.html"><i class="fa-solid fa-envelope"></i> Contact</a>
-    <a href="https://github.com/Shannon-Goddard" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+    <a href="https://github.com/Shannon-Goddard/seed-map-usa" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
   </nav>
   <div class="menu-legal">
     <a href="privacy.html">Privacy</a>
@@ -459,15 +459,25 @@ map.addLayer(breederMarkers);
 function buildBreederList() {
   const list = document.getElementById('breeder-list');
   const seen = new Set();
+  // Count carriers per breeder
+  const carrierCounts = {};
+  allData.forEach(loc => {
+    if (!loc.lat || !loc.brands) return;
+    loc.brands.split('|').forEach(bid => {
+      if (bid) carrierCounts[bid] = (carrierCounts[bid] || 0) + 1;
+    });
+  });
   const breeders = allData
     .filter(d => d.type.includes('breeder'))
     .filter(d => { if (seen.has(d.parent_id)) return false; seen.add(d.parent_id); return true; })
     .sort((a,b) => a.name.localeCompare(b.name));
   list.innerHTML = '';
   breeders.forEach(b => {
+    const count = carrierCounts[b.parent_id] || 0;
+    const countBadge = count > 0 ? `<span style="font-size:10px;color:#999;margin-left:auto;white-space:nowrap;">(${count})</span>` : '';
     const div = document.createElement('div');
     div.className = 'breeder-item';
-    div.innerHTML = `<input type="checkbox" data-id="${b.parent_id}"><img src="${LOGO_PATH}${b.parent_id}.png" onerror="this.style.display='none'"><span class="bi-name" title="${b.name}">${b.name}</span>`;
+    div.innerHTML = `<input type="checkbox" data-id="${b.parent_id}"><img src="${LOGO_PATH}${b.parent_id}.png" onerror="this.style.display='none'"><span class="bi-name" title="${b.name}">${b.name}</span>${countBadge}`;
     div.addEventListener('click', e => {
       if (e.target.tagName === 'INPUT') return;
       const cb = div.querySelector('input');
@@ -533,6 +543,9 @@ function applyBreederMode() {
   });
 
   document.getElementById('breeder-count').textContent = `${count} locations carry selected breeders`;
+  if (count === 0) {
+    document.getElementById('breeder-count').textContent = 'No mapped locations found for selected breeders';
+  }
 }
 
 // --- Logo Icon ---
@@ -661,6 +674,7 @@ function loadMapData(data) {
 
   buildBreederList();
   applyFilters();
+  applyUrlParams();
 
   document.getElementById('show-online').addEventListener('change', applyFilters);
   document.querySelectorAll('.type-filter').forEach(c => c.addEventListener('change', applyFilters));
@@ -737,6 +751,40 @@ function closeMenu() { menuPanel.classList.remove('open'); menuOverlay.classList
 menuBtn.addEventListener('click', openMenu);
 menuOverlay.addEventListener('click', closeMenu);
 menuClose.addEventListener('click', closeMenu);
+
+// --- Keyboard Shortcuts ---
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeMenu();
+    document.getElementById('controls').classList.remove('open');
+    searchResults.style.display = 'none';
+  }
+});
+
+// --- URL State Sharing ---
+function applyUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const state = params.get('state');
+  const breeder = params.get('breeder');
+  if (state) {
+    document.getElementById('state-filter').value = state;
+    applyFilters();
+  }
+  if (breeder) {
+    // Switch to breeder mode and check the breeder
+    document.querySelector('input[name="mode"][value="breeder"]').checked = true;
+    switchMode('breeder');
+    const breederIds = breeder.split(',');
+    breederIds.forEach(bid => {
+      const cb = document.querySelector(`.breeder-item input[data-id="${bid}"]`);
+      if (cb && !cb.checked) {
+        cb.checked = true;
+        selectedBreeders.push(bid);
+      }
+    });
+    applyBreederMode();
+  }
+}
 
 // --- Mobile Toggle ---
 document.getElementById('filter-toggle').addEventListener('click', () => document.getElementById('controls').classList.toggle('open'));

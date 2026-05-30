@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partners — CI Seed Map</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #333; line-height: 1.7; padding: 0; }
+.top-bar { position: sticky; top: 0; z-index: 100; background: #111; display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; }
+.top-bar a { color: #04AA6D; text-decoration: none; font-size: 13px; font-weight: 600; }
+.top-bar a:hover { color: #fff; }
+.top-bar img { height: 18px; }
+.content { padding: 40px 20px; max-width: 720px; margin: 0 auto; }
+h1 { font-size: 24px; margin-bottom: 4px; }
+h2 { font-size: 20px; margin-top: 40px; margin-bottom: 16px; color: #111; }
+.subtitle { color: #888; font-size: 14px; margin-bottom: 32px; }
+a { color: #04AA6D; }
+
+/* Partner Cards */
+.partner-grid { display: flex; flex-direction: column; gap: 16px; }
+.partner-card {
+  display: flex; align-items: center; gap: 16px;
+  background: #f9f9f9; border: 1px solid #eee; border-radius: 12px;
+  padding: 20px; transition: border-color 0.2s;
+}
+.partner-card:hover { border-color: #04AA6D; }
+.partner-card img {
+  width: 64px; height: 64px; object-fit: contain; border-radius: 8px;
+  background: #fff; padding: 4px; border: 1px solid #eee;
+}
+.partner-info { flex: 1; }
+.partner-info .partner-name { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+.partner-info .partner-desc { font-size: 13px; color: #666; margin-bottom: 8px; }
+.partner-info .partner-link {
+  display: inline-block; padding: 6px 14px; background: #04AA6D; color: #fff;
+  border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none;
+  transition: background 0.2s;
+}
+.partner-info .partner-link:hover { background: #038857; }
+.affiliate-badge {
+  display: inline-block; font-size: 10px; color: #999; background: #f0f0f0;
+  padding: 2px 6px; border-radius: 3px; margin-left: 8px; vertical-align: middle;
+}
+
+/* App Section */
+.app-section {
+  background: #111; border-radius: 12px; padding: 28px; margin-top: 16px;
+  display: flex; align-items: center; gap: 20px; color: #fff;
+}
+.app-section img { width: 72px; height: 72px; border-radius: 16px; }
+.app-section .app-info { flex: 1; }
+.app-section .app-info h3 { font-size: 18px; margin-bottom: 4px; }
+.app-section .app-info p { font-size: 13px; color: #999; margin-bottom: 12px; }
+.app-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.app-badges a img { height: 40px; width: auto; border-radius: 6px; }
+
+/* CTA */
+.cta-box {
+  background: #f0faf5; border: 2px solid #04AA6D; border-radius: 12px;
+  padding: 24px; text-align: center; margin-top: 40px;
+}
+.cta-box h3 { font-size: 18px; margin-bottom: 8px; }
+.cta-box p { font-size: 14px; color: #666; margin-bottom: 16px; }
+.cta-box a {
+  display: inline-block; padding: 10px 24px; background: #04AA6D; color: #fff;
+  border-radius: 8px; font-weight: 600; text-decoration: none;
+}
+.cta-box a:hover { background: #038857; }
+
+/* Disclaimer */
+.affiliate-disclaimer {
+  margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;
+  font-size: 11px; color: #999; line-height: 1.6;
+}
+
+footer { margin-top: 60px; padding: 16px 20px; background: #222; text-align: center; }
+footer .ci-badge { height: 2em; vertical-align: middle; }
+footer a { color: #ccc; text-decoration: none; font-size: 12px; }
+
+@media (max-width: 480px) {
+  .partner-card { flex-direction: column; text-align: center; }
+  .app-section { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html">&larr; Back to Map</a>
+  <a href="index.html"><img src="assets/img/ci-badge-color.svg" alt="CI"></a>
+</div>
+
+<div class="content">
+
+<h1>Partners</h1>
+<p class="subtitle">Trusted seed sources and tools we recommend.</p>
+
+<h2>🌱 Seed Partners</h2>
+
+<div class="partner-grid">
+  <div class="partner-card">
+    <img src="assets/logo/seedsman.png" alt="Seedsman">
+    <div class="partner-info">
+      <div class="partner-name">Seedsman <span class="affiliate-badge">Affiliate</span></div>
+      <div class="partner-desc">One of the world's largest online cannabis seed banks. Thousands of strains from 100+ breeders with worldwide shipping.</div>
+      <a class="partner-link" href="https://www.seedsman.com/?a_aid=6675f1c3ce128" target="_blank" rel="noopener sponsored">Shop Seedsman &rarr;</a>
+    </div>
+  </div>
+
+  <div class="partner-card">
+    <img src="assets/logo/ilgm.png" alt="ILGM">
+    <div class="partner-info">
+      <div class="partner-name">ILGM <span class="affiliate-badge">Affiliate</span></div>
+      <div class="partner-desc">I Love Growing Marijuana — beginner-friendly seed bank with guaranteed germination, free US shipping, and grow guides.</div>
+      <a class="partner-link" href="https://ilgm.com/?aff=7215" target="_blank" rel="noopener sponsored">Shop ILGM &rarr;</a>
+    </div>
+  </div>
+
+  <div class="partner-card">
+    <img src="assets/logo/seed-supreme.png" alt="Seed Supreme">
+    <div class="partner-info">
+      <div class="partner-name">Seed Supreme <span class="affiliate-badge">Affiliate</span></div>
+      <div class="partner-desc">Premium seed bank with curated genetics, stealth shipping, and a loyalty rewards program.</div>
+      <a class="partner-link" href="https://seedsupreme.com/?a_aid=loyal9" target="_blank" rel="noopener sponsored">Shop Seed Supreme &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<h2>📱 Our App</h2>
+
+<div class="app-section">
+  <img src="assets/img/growapp-icon.png" alt="GrowApp" onerror="this.src='assets/img/favicon-32.png'">
+  <div class="app-info">
+    <h3>GrowApp | Cannabis App</h3>
+    <p>Track your grows, log nutrients, monitor schedules, and connect with the community. Available on iOS and Android.</p>
+    <div class="app-badges">
+      <a href="https://apps.apple.com/us/app/growapp-cannabis-app/id6751991099" target="_blank" rel="noopener"><img src="assets/img/app-store-badge.png" alt="App Store" onerror="this.outerHTML='<span style=\'background:#000;color:#fff;padding:8px 12px;border-radius:6px;font-size:12px;\'>App Store</span>'"></a>
+      <a href="https://play.google.com/store/apps/details?id=com.GrowAppCannabisGuide&pli=1" target="_blank" rel="noopener"><img src="assets/img/google-play-badge.png" alt="Google Play" onerror="this.outerHTML='<span style=\'background:#000;color:#fff;padding:8px 12px;border-radius:6px;font-size:12px;\'>Google Play</span>'"></a>
+    </div>
+  </div>
+</div>
+
+<div class="cta-box">
+  <h3>Want to be a partner?</h3>
+  <p>Get your brand verified on the map, featured placement, or set up an affiliate partnership.</p>
+  <a href="contact.html">Get in Touch</a>
+</div>
+
+<div class="affiliate-disclaimer">
+  <strong>Affiliate Disclosure:</strong> Some links on this page are affiliate links. This means CI Seed Map may earn a commission if you make a purchase through these links, at no additional cost to you. We only recommend products and services we genuinely believe provide value to our community. Affiliate partnerships do not influence our map data, editorial content, or pin placement. See our <a href="terms.html">Terms of Service</a> for more details.
+</div>
+
+</div>
+
+<footer id="site-footer"></footer>
+<script src="footer.js"></script>
+</body>
+</html>
