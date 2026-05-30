@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — CI Seed Map</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #333; line-height: 1.7; padding: 0; }
+.top-bar { position: sticky; top: 0; z-index: 100; background: #111; display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; }
+.top-bar a { color: #04AA6D; text-decoration: none; font-size: 13px; font-weight: 600; }
+.top-bar a:hover { color: #fff; }
+.top-bar img { height: 18px; }
+.content { padding: 40px 20px; max-width: 600px; margin: 0 auto; }
+h1 { font-size: 24px; margin-bottom: 4px; }
+.subtitle { color: #888; font-size: 14px; margin-bottom: 32px; }
+a { color: #04AA6D; }
+
+/* Form */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #222; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;
+  font-size: 14px; font-family: inherit; transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: #04AA6D;
+}
+.form-group textarea { resize: vertical; min-height: 100px; }
+.form-group .hint { font-size: 11px; color: #999; margin-top: 2px; }
+
+/* Radio cards */
+.type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+.type-card {
+  border: 2px solid #eee; border-radius: 8px; padding: 14px 12px;
+  cursor: pointer; text-align: center; transition: all 0.2s; font-size: 13px;
+}
+.type-card:hover { border-color: #04AA6D; background: #f0faf5; }
+.type-card.active { border-color: #04AA6D; background: #f0faf5; }
+.type-card i { display: block; font-size: 20px; margin-bottom: 6px; color: #04AA6D; }
+.type-card input { display: none; }
+
+/* Conditional fields */
+.conditional { display: none; }
+.conditional.visible { display: block; }
+
+/* Submit */
+.submit-btn {
+  width: 100%; padding: 12px; border: none; border-radius: 8px;
+  background: #04AA6D; color: #fff; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+}
+.submit-btn:hover { background: #038857; }
+.submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* Success */
+.success-msg {
+  display: none; text-align: center; padding: 40px 20px;
+}
+.success-msg.visible { display: block; }
+.success-msg i { font-size: 48px; color: #04AA6D; margin-bottom: 12px; }
+.success-msg h2 { font-size: 20px; margin-bottom: 8px; }
+.success-msg p { color: #666; }
+
+footer { margin-top: 60px; padding: 16px 20px; background: #222; text-align: center; }
+footer .ci-badge { height: 2em; vertical-align: middle; }
+footer a { color: #ccc; text-decoration: none; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html">&larr; Back to Map</a>
+  <a href="index.html"><img src="assets/img/ci-badge-color.svg" alt="CI"></a>
+</div>
+
+<div class="content">
+
+<h1>Contact Us</h1>
+<p class="subtitle">Add a pin, correct info, become a partner, or just say hi.</p>
+
+<div id="form-wrap">
+  <div class="type-selector">
+    <label class="type-card" data-type="add">
+      <input type="radio" name="inquiry_type" value="Add a Pin">
+      <i class="fa-solid fa-map-pin"></i> Add a Pin
+    </label>
+    <label class="type-card" data-type="correct">
+      <input type="radio" name="inquiry_type" value="Correct Pin Info">
+      <i class="fa-solid fa-pen"></i> Correct Info
+    </label>
+    <label class="type-card" data-type="partner">
+      <input type="radio" name="inquiry_type" value="Become a Partner">
+      <i class="fa-solid fa-handshake"></i> Partner
+    </label>
+    <label class="type-card" data-type="general">
+      <input type="radio" name="inquiry_type" value="General Inquiry">
+      <i class="fa-solid fa-comment"></i> General
+    </label>
+  </div>
+
+  <form id="contact-form" action="https://formspree.io/f/mpqnepoe" method="POST" data-admin="https://formspree.io/f/mpqnepoe" data-partner="https://formspree.io/f/mwvzjlae">
+    <input type="hidden" name="_subject" id="form-subject" value="CI Seed Map — New Submission">
+    <input type="hidden" name="inquiry_type" id="hidden-type" value="">
+    <!-- Honeypot -->
+    <input type="text" name="_gotcha" style="display:none">
+
+    <!-- Common fields -->
+    <div class="form-group">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+
+    <!-- Add a Pin fields -->
+    <div class="conditional" data-for="add">
+      <div class="form-group">
+        <label for="biz-name">Business Name</label>
+        <input type="text" id="biz-name" name="business_name">
+      </div>
+      <div class="form-group">
+        <label for="biz-url">Website URL</label>
+        <input type="url" id="biz-url" name="business_url" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label for="biz-address">Address</label>
+        <input type="text" id="biz-address" name="business_address" placeholder="Street, City, State, Zip">
+      </div>
+      <div class="form-group">
+        <label for="biz-type">Type</label>
+        <select id="biz-type" name="business_type">
+          <option value="">Select...</option>
+          <option value="breeder">Breeder</option>
+          <option value="bank">Seed Bank</option>
+          <option value="dispensary">Dispensary</option>
+          <option value="cultivator">Cultivator</option>
+          <option value="multiple">Multiple (describe below)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="biz-notes">Additional Info</label>
+        <textarea id="biz-notes" name="additional_info" placeholder="Phone, hours, brands carried, anything else..."></textarea>
+      </div>
+    </div>
+
+    <!-- Correct Info fields -->
+    <div class="conditional" data-for="correct">
+      <div class="form-group">
+        <label for="pin-name">Which pin needs correction?</label>
+        <input type="text" id="pin-name" name="pin_name" placeholder="Business name as shown on map">
+      </div>
+      <div class="form-group">
+        <label for="correction">What needs to be corrected?</label>
+        <textarea id="correction" name="correction_details" placeholder="Describe what's wrong and what the correct info should be..."></textarea>
+      </div>
+    </div>
+
+    <!-- Partner fields -->
+    <div class="conditional" data-for="partner">
+      <div class="form-group">
+        <label for="partner-biz">Business / Brand Name</label>
+        <input type="text" id="partner-biz" name="partner_business">
+      </div>
+      <div class="form-group">
+        <label for="partner-url">Website</label>
+        <input type="url" id="partner-url" name="partner_url" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label for="partner-interest">What are you interested in?</label>
+        <select id="partner-interest" name="partner_interest">
+          <option value="">Select...</option>
+          <option value="get-verified">Get Verified (✅ badge on pin)</option>
+          <option value="featured">Featured Placement</option>
+          <option value="affiliate">Affiliate Partnership</option>
+          <option value="other">Other (describe below)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="partner-msg">Tell us more</label>
+        <textarea id="partner-msg" name="partner_message" placeholder="What are you looking to achieve?"></textarea>
+      </div>
+    </div>
+
+    <!-- General fields -->
+    <div class="conditional" data-for="general">
+      <div class="form-group">
+        <label for="gen-msg">Message</label>
+        <textarea id="gen-msg" name="message" placeholder="What's on your mind?"></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submit-btn" disabled>Select an inquiry type above</button>
+  </form>
+</div>
+
+<div class="success-msg" id="success">
+  <i class="fa-solid fa-circle-check"></i>
+  <h2>Sent!</h2>
+  <p>We'll get back to you soon. <a href="index.html">Back to the map</a>.</p>
+</div>
+
+</div>
+
+<footer id="site-footer"></footer>
+<script src="footer.js"></script>
+
+<script>
+const cards = document.querySelectorAll('.type-card');
+const conditionals = document.querySelectorAll('.conditional');
+const submitBtn = document.getElementById('submit-btn');
+const hiddenType = document.getElementById('hidden-type');
+const formSubject = document.getElementById('form-subject');
+const form = document.getElementById('contact-form');
+
+cards.forEach(card => {
+  card.addEventListener('click', () => {
+    cards.forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    const type = card.dataset.type;
+    const value = card.querySelector('input').value;
+    hiddenType.value = value;
+    formSubject.value = `CI Seed Map — ${value}`;
+    conditionals.forEach(c => c.classList.toggle('visible', c.dataset.for === type));
+    // Route partner inquiries to shannon@
+    form.action = type === 'partner' ? form.dataset.partner : form.dataset.admin;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
+  });
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('success').classList.add('visible');
+    } else {
+      submitBtn.textContent = 'Error — try again';
+      submitBtn.disabled = false;
+    }
+  } catch {
+    submitBtn.textContent = 'Error — try again';
+    submitBtn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CI Seed Map — Find Cannabis Seeds Near You</title>
+<meta property="og:title" content="CI Seed Map — Find Cannabis Seeds Near You">
+<meta property="og:description" content="Interactive map of cannabis seed breeders, seed banks, dispensaries, and cultivators across the USA.">
+<meta property="og:image" content="assets/img/preview.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://poweredby.ci/seed-map">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CI Seed Map — Find Cannabis Seeds Near You">
+<meta name="twitter:description" content="Interactive map of cannabis seed breeders, seed banks, dispensaries, and cultivators across the USA.">
+<meta name="twitter:image" content="assets/img/preview.png">
+<meta name="description" content="Interactive map of cannabis seed breeders, seed banks, dispensaries, and cultivators across the USA.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; display: flex; flex-direction: column; }
+
+#map { flex: 1; width: 100%; min-height: 0; }
+
+/* Age Gate */
+#age-gate {
+  position: fixed; inset: 0; z-index: 10000;
+  background: #111; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 20px;
+  text-align: center;
+}
+#age-gate.hidden { display: none; }
+#age-gate img { width: 140px; max-width: 40vw; margin-bottom: 24px; }
+#age-gate h1 { color: #fff; font-size: 22px; margin-bottom: 8px; }
+#age-gate p { color: #999; font-size: 13px; max-width: 400px; margin-bottom: 20px; line-height: 1.6; }
+#age-gate .gate-links { margin-bottom: 20px; }
+#age-gate .gate-links a { color: #04AA6D; font-size: 12px; margin: 0 6px; }
+#age-gate .gate-btn {
+  padding: 14px 40px; border: none; border-radius: 8px;
+  background: #04AA6D; color: #fff; font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: background 0.2s; margin-bottom: 12px;
+}
+#age-gate .gate-btn:hover { background: #038857; }
+#age-gate .gate-deny {
+  background: none; border: none; color: #666; font-size: 13px;
+  cursor: pointer; text-decoration: underline;
+}
+#age-gate .gate-deny:hover { color: #999; }
+
+/* Loader */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #111; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 20px;
+  transition: opacity 0.4s ease;
+}
+#loader.fade-out { opacity: 0; pointer-events: none; }
+#loader img { width: 120px; max-width: 40vw; animation: spin 1.8s cubic-bezier(0.45,0.05,0.55,0.95) infinite; }
+#loader p { color: #04AA6D; font-size: 14px; letter-spacing: 1px; }
+@keyframes spin { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+
+/* Controls */
+#controls {
+  position: absolute; top: 10px; right: 10px; z-index: 1000;
+  background: rgba(255,255,255,0.95); border-radius: 10px;
+  padding: 16px 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  width: 240px; font-size: 14px;
+  max-height: calc(100vh - 80px); overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+#controls .panel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+#controls .panel-header img { height: 22px; }
+#controls .panel-header span { font-size: 16px; font-weight: 700; color: #222; }
+.filter-group { margin-bottom: 12px; }
+.filter-group label { display: block; margin: 4px 0; cursor: pointer; color: #333; }
+.filter-group label:hover { color: #000; }
+.filter-group input { margin-right: 6px; cursor: pointer; }
+.divider { border-top: 1px solid #ddd; margin: 10px 0; }
+#count { font-size: 12px; color: #666; margin-top: 8px; }
+#state-filter { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+
+/* Mode Toggle */
+.mode-toggle { display: flex; gap: 0; margin-bottom: 12px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; }
+.mode-toggle label { flex: 1; text-align: center; padding: 6px 0; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.mode-toggle input { display: none; }
+.mode-toggle input:checked + span { background: #04AA6D; color: #fff; }
+.mode-toggle span { display: block; padding: 6px 0; }
+
+/* Breeder List */
+#breeder-panel { display: none; }
+#breeder-panel.active { display: block; }
+#location-panel { display: block; }
+#location-panel.hidden { display: none; }
+#breeder-search { width: 100%; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; margin-bottom: 8px; }
+#breeder-list { max-height: 280px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
+.breeder-item { display: flex; align-items: center; gap: 6px; padding: 5px 8px; cursor: pointer; border-bottom: 1px solid #f5f5f5; font-size: 12px; }
+.breeder-item:hover { background: #f0faf5; }
+.breeder-item img { width: 22px; height: 22px; object-fit: contain; border-radius: 3px; }
+.breeder-item input { margin: 0; cursor: pointer; }
+.breeder-item .bi-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#breeder-count { font-size: 11px; color: #666; margin-top: 6px; }
+
+/* Logo Marker */
+.logo-marker { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); object-fit: cover; background: #fff; }
+.logo-marker-wrap { position: relative; }
+.logo-marker-badge { position: absolute; top: -4px; right: -4px; background: #04AA6D; color: #fff; font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; }
+.logo-marker-ring { border: 3px solid #04AA6D; }
+
+#filter-toggle {
+  display: none; position: absolute; top: 10px; right: 10px; z-index: 1001;
+  background: #fff; border: none; border-radius: 8px; padding: 10px 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25); font-size: 18px; cursor: pointer;
+}
+
+/* Hamburger Menu */
+#menu-btn {
+  position: absolute; top: 10px; left: 10px; z-index: 1002;
+  width: 40px; height: 40px; border: none; border-radius: 8px;
+  background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  font-size: 20px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; color: #222;
+}
+#menu-btn:hover { background: #f0faf5; }
+#menu-overlay {
+  position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.5);
+  display: none; opacity: 0; transition: opacity 0.3s ease;
+}
+#menu-overlay.open { display: block; opacity: 1; }
+#menu-panel {
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 2001;
+  width: 260px; max-width: 80vw; background: #111;
+  transform: translateX(-100%); transition: transform 0.3s ease;
+  display: flex; flex-direction: column; padding: 20px 0;
+}
+#menu-panel.open { transform: translateX(0); }
+#menu-panel .menu-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 20px 16px; border-bottom: 1px solid #333;
+}
+#menu-panel .menu-header img { height: 20px; }
+#menu-panel .menu-header span { color: #fff; font-weight: 700; font-size: 15px; }
+#menu-panel nav { flex: 1; padding: 16px 0; }
+#menu-panel nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 20px; color: #ccc; text-decoration: none; font-size: 14px;
+  transition: background 0.2s;
+}
+#menu-panel nav a:hover { background: #222; color: #fff; }
+#menu-panel nav a i { width: 20px; text-align: center; color: #04AA6D; }
+#menu-panel .menu-legal {
+  padding: 12px 20px; border-top: 1px solid #333;
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+#menu-panel .menu-legal a { color: #666; font-size: 11px; text-decoration: none; }
+#menu-panel .menu-legal a:hover { color: #04AA6D; }
+#menu-close {
+  position: absolute; top: 12px; right: 12px; background: none;
+  border: none; color: #666; font-size: 20px; cursor: pointer;
+}
+#menu-close:hover { color: #fff; }
+
+/* Search */
+#search-wrap {
+  position: absolute; top: 10px; left: 60px; z-index: 1000;
+  display: flex; align-items: center; width: 260px; max-width: calc(100% - 140px);
+}
+#search {
+  flex: 1; padding: 10px 12px; border: none; border-radius: 8px 0 0 8px;
+  font-size: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); outline: none;
+}
+#search::placeholder { color: #aaa; }
+#search-btn {
+  padding: 10px 14px; border: none; border-radius: 0 8px 8px 0;
+  background: #04AA6D; color: #fff; font-size: 14px; cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+#search-btn:hover { background: #038857; }
+#search-results {
+  position: absolute; top: 100%; left: 0; width: 100%;
+  background: #fff; border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  max-height: 240px; overflow-y: auto; display: none;
+}
+#search-results .sr-item { padding: 8px 12px; cursor: pointer; font-size: 13px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; }
+#search-results .sr-item:hover { background: #f0faf5; }
+#search-results .sr-item img { width: 24px; height: 24px; object-fit: contain; border-radius: 4px; }
+#search-results .sr-item .sr-name { font-weight: 600; }
+#search-results .sr-item .sr-loc { color: #888; font-size: 11px; }
+
+/* Locate */
+#locate-btn {
+  position: absolute; bottom: 56px; left: 10px; z-index: 1000;
+  width: 40px; height: 40px; border: none; border-radius: 8px;
+  background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+#locate-btn:hover { background: #f0faf5; }
+#locate-btn.locating { animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+/* Popups */
+.leaflet-popup-content { font-size: 13px; line-height: 1.5; max-width: 300px; }
+.popup-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.popup-header img { width: 40px; height: 40px; object-fit: contain; border-radius: 6px; background: #f5f5f5; padding: 2px; }
+.popup-header .popup-name { font-weight: 700; font-size: 15px; }
+.popup-header .popup-type { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.popup-detail { margin: 3px 0; word-break: break-word; }
+.popup-detail a { color: #2563eb; text-decoration: none; }
+.popup-detail a:hover { text-decoration: underline; }
+.popup-brands { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0; }
+.popup-brands img { width: 28px; height: 28px; object-fit: contain; border-radius: 4px; background: #f9f9f9; padding: 1px; cursor: pointer; border: 1px solid #eee; }
+.popup-brands img:hover { border-color: #04AA6D; }
+.popup-accordion { margin-top: 8px; }
+.popup-accordion summary { cursor: pointer; font-weight: 600; font-size: 12px; color: #04AA6D; }
+.popup-accordion .acc-content { font-size: 12px; color: #555; margin-top: 6px; max-height: 150px; overflow-y: auto; line-height: 1.4; }
+
+/* Clusters */
+.marker-cluster { background-clip: padding-box; border-radius: 50%; }
+.marker-cluster div { width: 30px; height: 30px; margin: 5px; border-radius: 50%; text-align: center; font: 700 13px/30px sans-serif; color: #fff; }
+.marker-cluster-small { background: rgba(4,170,109,0.35); }
+.marker-cluster-small div { background: rgba(4,170,109,0.6); }
+.marker-cluster-medium { background: rgba(3,136,87,0.45); }
+.marker-cluster-medium div { background: rgba(3,136,87,0.75); }
+.marker-cluster-large { background: rgba(2,85,55,0.55); }
+.marker-cluster-large div { background: rgba(2,85,55,0.9); }
+
+/* Footer */
+footer {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 4px 8px; background: #222; color: #999; font-size: 12px;
+  padding: 8px 16px; min-height: 40px;
+}
+footer a { color: #ccc; text-decoration: none; }
+footer a:hover { color: #fff; }
+footer .ci-badge { height: 2em; vertical-align: middle; }
+footer span { white-space: nowrap; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  #filter-toggle { display: block; }
+  #controls { width: calc(100% - 20px); right: 10px; top: 50px; max-height: calc(100vh - 120px); transform: translateX(calc(100% + 20px)); }
+  #controls.open { transform: translateX(0); }
+  #search-wrap { left: 60px; width: calc(100% - 140px); }
+  #locate-btn { bottom: 52px; }
+  .leaflet-popup-content { max-width: 240px; font-size: 12px; }
+  footer { font-size: 11px; gap: 3px 6px; padding: 6px 10px; }
+}
+@media (max-width: 480px) {
+  #controls { width: calc(100% - 20px); }
+  footer { font-size: 10px; padding: 6px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div id="age-gate">
+  <img src="assets/img/ci-badge-color.svg" alt="CI Seed Map">
+  <h1>Are you 21 or older?</h1>
+  <p>This platform contains information about cannabis seeds and related products. By entering, you confirm you are at least 21 years of age and acknowledge our use of cookies and analytics as described in our Privacy Policy.</p>
+  <div class="gate-links">
+    <a href="privacy.html" target="_blank">Privacy Policy</a>
+    <a href="terms.html" target="_blank">Terms of Service</a>
+    <a href="disclaimer.html" target="_blank">Disclaimer</a>
+  </div>
+  <button class="gate-btn" id="gate-accept">I am 21+ &mdash; Enter</button>
+  <button class="gate-deny" id="gate-deny">No, take me back</button>
+</div>
+
+<div id="loader">
+  <img src="assets/img/ci-badge-color.svg" alt="Loading...">
+  <p>LOADING MAP&hellip;</p>
+</div>
+
+<div id="map"></div>
+
+<button id="menu-btn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+
+<div id="menu-overlay"></div>
+<div id="menu-panel">
+  <button id="menu-close" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+  <div class="menu-header">
+    <img src="assets/img/ci-badge-color.svg" alt="CI">
+    <span>Seed Map</span>
+  </div>
+  <nav>
+    <a href="index.html"><i class="fa-solid fa-map"></i> Map</a>
+    <a href="mission.html"><i class="fa-solid fa-bullseye"></i> Mission</a>
+    <a href="partners.html"><i class="fa-solid fa-handshake"></i> Partners</a>
+    <a href="contact.html"><i class="fa-solid fa-envelope"></i> Contact</a>
+    <a href="https://github.com/Shannon-Goddard" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+  </nav>
+  <div class="menu-legal">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="disclaimer.html">Disclaimer</a>
+  </div>
+</div>
+
+<div id="search-wrap">
+  <input type="text" id="search" placeholder="Search name or city..." autocomplete="off">
+  <button id="search-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+  <div id="search-results"></div>
+</div>
+
+<button id="locate-btn" aria-label="Find my location" title="Find my location"><i class="fa-solid fa-location-crosshairs"></i></button>
+
+<button id="filter-toggle" aria-label="Toggle filters">🌱 <i class="fa-solid fa-sliders"></i></button>
+
+<div id="controls">
+  <div class="panel-header">
+    <span>Seed Map</span>
+    <img src="assets/img/ci-badge-color.svg" alt="CI">
+  </div>
+
+  <div class="mode-toggle">
+    <label><input type="radio" name="mode" value="location" checked><span>📍 Locations</span></label>
+    <label><input type="radio" name="mode" value="breeder"><span>🌱 Breeders</span></label>
+  </div>
+
+  <div id="location-panel">
+    <div class="filter-group">
+      <label><input type="checkbox" id="show-online" checked> 🔵 Online Sellers</label>
+    </div>
+    <div class="divider"></div>
+    <div class="filter-group">
+      <strong>Type</strong>
+      <label><input type="checkbox" class="type-filter" value="breeder" checked> Breeder</label>
+      <label><input type="checkbox" class="type-filter" value="bank" checked> Seed Bank</label>
+      <label><input type="checkbox" class="type-filter" value="dispensary" checked> Dispensary</label>
+      <label><input type="checkbox" class="type-filter" value="cultivator" checked> Cultivator</label>
+    </div>
+    <div class="divider"></div>
+    <div class="filter-group">
+      <strong>State</strong>
+      <select id="state-filter"><option value="">All States</option></select>
+    </div>
+    <div id="count"></div>
+  </div>
+
+  <div id="breeder-panel">
+    <input type="text" id="breeder-search" placeholder="Search breeders...">
+    <div id="breeder-list"></div>
+    <div id="breeder-count"></div>
+  </div>
+</div>
+
+<footer id="site-footer"></footer>
+
+<script src="footer.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+const LOGO_PATH = 'assets/logo/';
+let allData = [];
+let pins = [];
+let cluster;
+let map;
+
+// --- Init Map ---
+const isMobile = window.innerWidth <= 768;
+map = L.map('map', {
+  worldCopyJump: true,
+  maxBounds: [[-85, -Infinity], [85, Infinity]],
+  minZoom: 2
+}).setView([39.5, -98.5], isMobile ? 3 : 5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors', maxZoom: 18, noWrap: true
+}).addTo(map);
+
+const redIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25,41], iconAnchor: [12,41], popupAnchor: [1,-34], shadowSize: [41,41]
+});
+const blueIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25,41], iconAnchor: [12,41], popupAnchor: [1,-34], shadowSize: [41,41]
+});
+
+cluster = L.markerClusterGroup({ maxClusterRadius: 40 });
+map.addLayer(cluster);
+
+// --- Build Popup ---
+function buildPopup(p) {
+  const logo = p.img ? `<img src="${LOGO_PATH}${p.img}" alt="${p.name}" onerror="this.style.display='none'">` : '';
+  let html = `<div class="popup-header">${logo}<div><div class="popup-name">${p.name}</div><div class="popup-type">${p.type.replace(/\|/g,' · ')}</div></div></div>`;
+
+  if (p.address && p.address !== 'NA')
+    html += `<div class="popup-detail">📍 ${p.address}, ${p.city}, ${p.state} ${p.zip}</div>`;
+  else if (p.city && p.city !== 'NA')
+    html += `<div class="popup-detail">📍 ${p.city}, ${p.state}</div>`;
+  if (p.phone && p.phone !== 'NA') html += `<div class="popup-detail">📞 ${p.phone}</div>`;
+  if (p.hours && p.hours !== 'NA') html += `<div class="popup-detail">🕐 ${p.hours}</div>`;
+  if (p.url && p.url !== 'NA') html += `<div class="popup-detail"><a href="${p.url}" target="_blank">🌐 Website</a></div>`;
+
+  // Brands logos
+  if (p.brands) {
+    const brandIds = p.brands.split('|').filter(b => b && b !== p.id).slice(0, 12);
+    if (brandIds.length) {
+      html += '<div class="popup-brands">';
+      brandIds.forEach(bid => {
+        const brand = allData.find(d => d.id === bid);
+        const bUrl = brand ? brand.url : '#';
+        const bName = brand ? brand.name : bid;
+        html += `<a href="${bUrl}" target="_blank" title="${bName}"><img src="${LOGO_PATH}${bid}.png" alt="${bName}" onerror="this.parentElement.style.display='none'"></a>`;
+      });
+      if (p.brands.split('|').length > 12) html += `<span style="font-size:11px;color:#888;align-self:center;">+${p.brands.split('|').length - 12} more</span>`;
+      html += '</div>';
+    }
+  }
+
+  // Accordion
+  const hasMore = (p.audit_note && p.audit_note !== 'NA') || (p.highlights && p.highlights !== 'NA');
+  if (hasMore) {
+    html += '<details class="popup-accordion"><summary>More Info</summary><div class="acc-content">';
+    if (p.highlights && p.highlights !== 'NA') html += `<div><strong>Highlights:</strong> ${p.highlights.replace(/\|/g, ', ')}</div>`;
+    if (p.audit_note && p.audit_note !== 'NA') html += `<div style="margin-top:4px;">${p.audit_note.replace(/\n/g,'<br>')}</div>`;
+    html += '</div></details>';
+  }
+
+  return html;
+}
+
+// --- Filters ---
+function applyFilters() {
+  const showOnline = document.getElementById('show-online').checked;
+  const activeTypes = [...document.querySelectorAll('.type-filter:checked')].map(c => c.value);
+  const stateVal = document.getElementById('state-filter').value;
+
+  cluster.clearLayers();
+  let count = 0;
+
+  pins.forEach(({ marker, data }) => {
+    if (data.online && !showOnline) return;
+    if (!data.lat) return;
+    const types = data.type.split('|');
+    if (!types.some(t => activeTypes.includes(t))) return;
+    if (stateVal && data.state !== stateVal) return;
+    cluster.addLayer(marker);
+    count++;
+  });
+
+  document.getElementById('count').textContent = `Showing ${count} of ${pins.length} locations`;
+}
+
+// --- Breeder Mode State ---
+let currentMode = 'location';
+let selectedBreeders = []; // ordered array of checked breeder ids
+let breederMarkers = L.layerGroup();
+map.addLayer(breederMarkers);
+
+// --- Breeder Mode: Build List (deduplicated by parent_id) ---
+function buildBreederList() {
+  const list = document.getElementById('breeder-list');
+  const seen = new Set();
+  const breeders = allData
+    .filter(d => d.type.includes('breeder'))
+    .filter(d => { if (seen.has(d.parent_id)) return false; seen.add(d.parent_id); return true; })
+    .sort((a,b) => a.name.localeCompare(b.name));
+  list.innerHTML = '';
+  breeders.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'breeder-item';
+    div.innerHTML = `<input type="checkbox" data-id="${b.parent_id}"><img src="${LOGO_PATH}${b.parent_id}.png" onerror="this.style.display='none'"><span class="bi-name" title="${b.name}">${b.name}</span>`;
+    div.addEventListener('click', e => {
+      if (e.target.tagName === 'INPUT') return;
+      const cb = div.querySelector('input');
+      cb.checked = !cb.checked;
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    div.querySelector('input').addEventListener('change', e => {
+      const id = e.target.dataset.id;
+      if (e.target.checked) { selectedBreeders.push(id); }
+      else { selectedBreeders = selectedBreeders.filter(x => x !== id); }
+      applyBreederMode();
+    });
+    list.appendChild(div);
+  });
+}
+
+// --- Breeder Mode: Search ---
+function filterBreederList() {
+  const q = document.getElementById('breeder-search').value.trim().toLowerCase();
+  document.querySelectorAll('.breeder-item').forEach(item => {
+    const name = item.querySelector('.bi-name').textContent.toLowerCase();
+    item.style.display = name.includes(q) ? '' : 'none';
+  });
+}
+
+// --- Breeder Mode: Apply (uses parent_id for matching) ---
+function applyBreederMode() {
+  breederMarkers.clearLayers();
+  if (!selectedBreeders.length) {
+    document.getElementById('breeder-count').textContent = 'Select breeders to see carriers';
+    return;
+  }
+
+  // Find all locations that carry any selected breeder (match on parent_id in brands)
+  const locationMatches = new Map(); // unique key -> { loc, matched[] }
+  allData.forEach(loc => {
+    if (!loc.lat || !loc.brands) return;
+    const locBrands = loc.brands.split('|');
+    const matched = selectedBreeders.filter(bid => locBrands.includes(bid));
+    if (matched.length > 0) {
+      locationMatches.set(loc.id, { loc, matched });
+    }
+  });
+
+  // Also show the breeders themselves (all locations via parent_id)
+  selectedBreeders.forEach(bid => {
+    allData.filter(d => d.parent_id === bid && d.lat).forEach(breeder => {
+      if (!locationMatches.has(breeder.id)) {
+        locationMatches.set(breeder.id, { loc: breeder, matched: [bid] });
+      }
+    });
+  });
+
+  let count = 0;
+  locationMatches.forEach(({ loc, matched }) => {
+    const primaryBreederId = matched[0];
+    const hasMultiple = matched.length > 1;
+    const icon = createLogoIcon(primaryBreederId, hasMultiple, matched.length - 1);
+    const marker = L.marker([loc.lat, loc.lng], { icon })
+      .bindPopup(() => buildBreederModePopup(loc, matched), { maxWidth: 320 });
+    breederMarkers.addLayer(marker);
+    count++;
+  });
+
+  document.getElementById('breeder-count').textContent = `${count} locations carry selected breeders`;
+}
+
+// --- Logo Icon ---
+function createLogoIcon(breederId, hasRing, extraCount) {
+  const ringClass = hasRing ? ' logo-marker-ring' : '';
+  const badge = extraCount > 0 ? `<div class="logo-marker-badge">+${extraCount}</div>` : '';
+  return L.divIcon({
+    className: 'logo-marker-wrap',
+    html: `<img class="logo-marker${ringClass}" src="${LOGO_PATH}${breederId}.png" onerror="this.src='assets/img/favicon-32.png'">${badge}`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -20]
+  });
+}
+
+// --- Breeder Mode Popup ---
+function buildBreederModePopup(loc, matchedBreederIds) {
+  const logo = loc.img ? `<img src="${LOGO_PATH}${loc.img}" alt="${loc.name}" onerror="this.style.display='none'">` : '';
+  let html = `<div class="popup-header">${logo}<div><div class="popup-name">${loc.name}</div><div class="popup-type">${loc.type.replace(/\|/g,' · ')}</div></div></div>`;
+
+  if (loc.address && loc.address !== 'NA')
+    html += `<div class="popup-detail">📍 ${loc.address}, ${loc.city}, ${loc.state} ${loc.zip}</div>`;
+  else if (loc.city && loc.city !== 'NA')
+    html += `<div class="popup-detail">📍 ${loc.city}, ${loc.state}</div>`;
+  if (loc.phone && loc.phone !== 'NA') html += `<div class="popup-detail">📞 ${loc.phone}</div>`;
+  if (loc.url && loc.url !== 'NA') html += `<div class="popup-detail"><a href="${loc.url}" target="_blank">🌐 Website</a></div>`;
+
+  // Show matched breeders
+  html += '<div style="margin-top:8px;font-weight:600;font-size:12px;">Carries your selections:</div>';
+  html += '<div class="popup-brands">';
+  matchedBreederIds.forEach(bid => {
+    const b = allData.find(d => d.id === bid);
+    const bName = b ? b.name : bid;
+    const bUrl = b ? b.url : '#';
+    html += `<a href="${bUrl}" target="_blank" title="${bName}"><img src="${LOGO_PATH}${bid}.png" alt="${bName}" onerror="this.parentElement.style.display='none'"></a>`;
+  });
+  html += '</div>';
+
+  // Accordion
+  if (loc.audit_note && loc.audit_note !== 'NA') {
+    html += '<details class="popup-accordion"><summary>More Info</summary><div class="acc-content">';
+    html += `<div>${loc.audit_note.replace(/\n/g,'<br>')}</div>`;
+    html += '</div></details>';
+  }
+  return html;
+}
+
+// --- Mode Switch ---
+function switchMode(mode) {
+  currentMode = mode;
+  const locPanel = document.getElementById('location-panel');
+  const brPanel = document.getElementById('breeder-panel');
+  if (mode === 'location') {
+    locPanel.classList.remove('hidden');
+    brPanel.classList.remove('active');
+    breederMarkers.clearLayers();
+    cluster.addTo(map);
+    applyFilters();
+  } else {
+    locPanel.classList.add('hidden');
+    brPanel.classList.add('active');
+    map.removeLayer(cluster);
+    applyBreederMode();
+  }
+}
+
+// --- Load Data ---
+const API_BASE = 'https://2u8vskmld7.execute-api.us-east-1.amazonaws.com/prod';
+
+// --- Age Gate ---
+const ageGate = document.getElementById('age-gate');
+const loader = document.getElementById('loader');
+
+if (sessionStorage.getItem('seed-map-verified')) {
+  ageGate.classList.add('hidden');
+  initMap();
+} else {
+  loader.style.display = 'none';
+}
+
+document.getElementById('gate-accept').addEventListener('click', () => {
+  sessionStorage.setItem('seed-map-verified', 'true');
+  ageGate.classList.add('hidden');
+  loader.style.display = '';
+  initMap();
+});
+
+document.getElementById('gate-deny').addEventListener('click', () => {
+  window.location.href = 'https://google.com';
+});
+
+// --- Init Map After Age Gate ---
+function initMap() {
+  fetchData().then(data => {
+    loadMapData(data);
+  });
+}
+
+// --- Fetch data via API with session token ---
+async function fetchData() {
+  const tokenRes = await fetch(`${API_BASE}/token`);
+  const { token } = await tokenRes.json();
+  sessionStorage.setItem('seed-map-token', token);
+  const dataRes = await fetch(`${API_BASE}/data`, { headers: { 'X-Session-Token': token } });
+  return dataRes.json();
+}
+
+function loadMapData(data) {
+  allData = data;
+  const states = new Set();
+
+  data.forEach(p => {
+    if (!p.lat) return;
+    if (p.state) states.add(p.state);
+    const icon = p.online ? blueIcon : redIcon;
+    const marker = L.marker([p.lat, p.lng], { icon }).bindPopup(() => buildPopup(p), { maxWidth: 320 });
+    pins.push({ marker, data: p });
+  });
+
+  const sel = document.getElementById('state-filter');
+  [...states].sort().forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    sel.appendChild(opt);
+  });
+
+  buildBreederList();
+  applyFilters();
+
+  document.getElementById('show-online').addEventListener('change', applyFilters);
+  document.querySelectorAll('.type-filter').forEach(c => c.addEventListener('change', applyFilters));
+  document.getElementById('state-filter').addEventListener('change', applyFilters);
+  document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', e => switchMode(e.target.value)));
+  document.getElementById('breeder-search').addEventListener('input', filterBreederList);
+
+  setTimeout(() => {
+    map.invalidateSize();
+    loader.classList.add('fade-out');
+    setTimeout(() => loader.remove(), 500);
+  }, 100);
+}
+
+// --- Search ---
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+let searchTimeout;
+searchInput.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(doSearch, 200); });
+searchInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); doSearch(); pickFirst(); }
+  if (e.key === 'Escape') { searchResults.style.display = 'none'; searchInput.blur(); }
+});
+document.getElementById('search-btn').addEventListener('click', () => { doSearch(); pickFirst(); });
+
+function doSearch() {
+  const q = searchInput.value.trim().toLowerCase();
+  searchResults.innerHTML = '';
+  if (q.length < 2) { searchResults.style.display = 'none'; return; }
+  const matches = pins.filter(({ data: d }) =>
+    d.name.toLowerCase().includes(q) || d.city.toLowerCase().includes(q) || d.state.toLowerCase() === q
+  ).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  matches.forEach(({ marker, data: d }) => {
+    const div = document.createElement('div');
+    div.className = 'sr-item';
+    const logoHtml = d.img ? `<img src="${LOGO_PATH}${d.img}" onerror="this.style.display='none'">` : '';
+    div.innerHTML = `${logoHtml}<div><div class="sr-name">${d.name}</div><div class="sr-loc">${d.city}, ${d.state} · ${d.type.replace(/\|/g,', ')}</div></div>`;
+    div.addEventListener('click', () => flyToPin(marker, d));
+    searchResults.appendChild(div);
+  });
+  searchResults.style.display = 'block';
+}
+function pickFirst() { const f = searchResults.querySelector('.sr-item'); if (f) f.click(); }
+function flyToPin(marker, d) {
+  searchResults.style.display = 'none';
+  map.flyTo([d.lat, d.lng], 14, { duration: 1 });
+  setTimeout(() => { cluster.zoomToShowLayer(marker, () => marker.openPopup()); }, 1100);
+}
+document.addEventListener('click', e => { if (!e.target.closest('#search-wrap')) searchResults.style.display = 'none'; });
+
+// --- Locate Me ---
+document.getElementById('locate-btn').addEventListener('click', function() {
+  if (!navigator.geolocation) { alert('Geolocation not supported.'); return; }
+  this.classList.add('locating');
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      this.classList.remove('locating');
+      map.flyTo([pos.coords.latitude, pos.coords.longitude], 10, { duration: 1.2 });
+      L.circle([pos.coords.latitude, pos.coords.longitude], { radius: 800, color: '#04AA6D', fillColor: '#04AA6D', fillOpacity: 0.15, weight: 2 }).addTo(map).bindPopup('📍 You are here').openPopup();
+    },
+    () => { this.classList.remove('locating'); alert('Could not get your location.'); },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+});
+
+// --- Hamburger Menu ---
+const menuBtn = document.getElementById('menu-btn');
+const menuPanel = document.getElementById('menu-panel');
+const menuOverlay = document.getElementById('menu-overlay');
+const menuClose = document.getElementById('menu-close');
+function openMenu() { menuPanel.classList.add('open'); menuOverlay.classList.add('open'); }
+function closeMenu() { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); }
+menuBtn.addEventListener('click', openMenu);
+menuOverlay.addEventListener('click', closeMenu);
+menuClose.addEventListener('click', closeMenu);
+
+// --- Mobile Toggle ---
+document.getElementById('filter-toggle').addEventListener('click', () => document.getElementById('controls').classList.toggle('open'));
+document.getElementById('map').addEventListener('click', () => document.getElementById('controls').classList.remove('open'));
+
+// --- Resize ---
+window.addEventListener('resize', () => map.invalidateSize());
+</script>
+</body>
+</html>
