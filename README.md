@@ -2,7 +2,7 @@
 
 An interactive, intelligence-driven map of cannabis seed breeders, seed banks, dispensaries, and cultivators across the United States. Built to solve a real problem: with pending federal hemp legislation prohibiting cannabis seeds from crossing state lines, growers need to know what genetics are available **within their state** — right now.
 
-**Live:** [poweredby.ci/seed-map](https://poweredby.ci/seed-map)
+**Live:** [seed-map.poweredbyci.live](https://seed-map.poweredbyci.live)
 
 ---
 
