@@ -106,8 +106,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; d
 #breeder-count { font-size: 11px; color: #666; margin-top: 6px; }
 
 /* Logo Marker */
-.logo-marker { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); object-fit: cover; background: #fff; }
-.logo-marker-wrap { position: relative; }
+.logo-marker-wrap { width: 36px; height: 36px; position: relative; }
+.logo-marker { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); object-fit: cover; background: #fff; position: absolute; top: 2px; left: 2px; }
 .logo-marker-badge { position: absolute; top: -4px; right: -4px; background: #04AA6D; color: #fff; font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; }
 .logo-marker-ring { border: 3px solid #04AA6D; }
 
@@ -553,11 +553,11 @@ function createLogoIcon(breederId, hasRing, extraCount) {
   const ringClass = hasRing ? ' logo-marker-ring' : '';
   const badge = extraCount > 0 ? `<div class="logo-marker-badge">+${extraCount}</div>` : '';
   return L.divIcon({
-    className: 'logo-marker-wrap',
-    html: `<img class="logo-marker${ringClass}" src="${LOGO_PATH}${breederId}.png" onerror="this.src='assets/img/favicon-32.png'">${badge}`,
+    className: '',
+    html: `<div class="logo-marker-wrap"><img class="logo-marker${ringClass}" src="${LOGO_PATH}${breederId}.png" onerror="this.src='assets/img/favicon-32.png'">${badge}</div>`,
     iconSize: [36, 36],
     iconAnchor: [18, 18],
-    popupAnchor: [0, -20]
+    popupAnchor: [0, -18]
   });
 }
 
