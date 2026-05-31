@@ -17,6 +17,66 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CI Seed Map",
+  "url": "https://seed-map.poweredbyci.live",
+  "description": "Interactive map of cannabis seed breeders, seed banks, dispensaries, and cultivators across the United States. Find cannabis seeds available within your state.",
+  "applicationCategory": "ReferenceApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Loyal9 LLC",
+    "url": "https://poweredbyci.live",
+    "email": "admin@loyal9.app",
+    "contactPoint": [
+      {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "admin@loyal9.app"
+      },
+      {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "email": "shannon@loyal9.app"
+      }
+    ]
+  },
+  "image": "https://seed-map.poweredbyci.live/assets/img/preview.png",
+  "screenshot": "https://seed-map.poweredbyci.live/assets/img/preview.png",
+  "featureList": [
+    "Interactive map with 1039 cannabis seed locations",
+    "Filter by breeder, seed bank, dispensary, cultivator",
+    "Breeder mode with logo markers",
+    "Search by name, city, or state",
+    "Geolocation to find nearby seed sources",
+    "27+ US states covered",
+    "924 unique breeders mapped"
+  ],
+  "keywords": "cannabis seeds, seed map, cannabis breeders, seed banks, dispensaries, find cannabis seeds, hemp law, cannabis genetics, USA seed map"
+}
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8M4SQXW0TH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8M4SQXW0TH');
+</script>
+<script>
+  // Custom GA4 events
+  function trackEvent(name, params) {
+    if (typeof gtag === 'function') gtag('event', name, params);
+  }
+</script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -383,8 +443,23 @@ const blueIcon = new L.Icon({
   iconSize: [25,41], iconAnchor: [12,41], popupAnchor: [1,-34], shadowSize: [41,41]
 });
 
-cluster = L.markerClusterGroup({ maxClusterRadius: 40 });
+cluster = L.markerClusterGroup({
+  maxClusterRadius: 40,
+  zoomToBoundsOnClick: true
+});
+cluster.on('clusterclick', function(e) {
+  trackEvent('marker_cluster_click', { cluster_size: e.layer.getChildCount() });
+});
 map.addLayer(cluster);
+
+let lastTrackedZoom = null;
+map.on('zoomend', function() {
+  const z = map.getZoom();
+  if (z !== lastTrackedZoom) {
+    lastTrackedZoom = z;
+    trackEvent('map_zoom', { zoom_level: z });
+  }
+});
 
 // --- Build Popup ---
 function buildPopup(p) {
@@ -397,7 +472,7 @@ function buildPopup(p) {
     html += `<div class="popup-detail">📍 ${p.city}, ${p.state}</div>`;
   if (p.phone && p.phone !== 'NA') html += `<div class="popup-detail">📞 ${p.phone}</div>`;
   if (p.hours && p.hours !== 'NA') html += `<div class="popup-detail">🕐 ${p.hours}</div>`;
-  if (p.url && p.url !== 'NA') html += `<div class="popup-detail"><a href="${p.url}" target="_blank">🌐 Website</a></div>`;
+  if (p.url && p.url !== 'NA') html += `<div class="popup-detail"><a href="${p.url}" target="_blank" onclick="trackEvent('outbound_link_click',{business_name:'${p.name.replace(/'/g,"\\'")}'  ,url:'${p.url}'})">🌐 Website</a></div>`;
 
   // Brands logos
   if (p.brands) {
@@ -418,7 +493,8 @@ function buildPopup(p) {
   // Accordion
   const hasMore = (p.audit_note && p.audit_note !== 'NA') || (p.highlights && p.highlights !== 'NA');
   if (hasMore) {
-    html += '<details class="popup-accordion"><summary>More Info</summary><div class="acc-content">';
+    html += '<details class="popup-accordion" onclick="trackEvent(\'more_info_expand\',{business_name:\'' + p.name.replace(/'/g,"\\'") + '\'})">';
+    html += '<summary>More Info</summary><div class="acc-content">';
     if (p.highlights && p.highlights !== 'NA') html += `<div><strong>Highlights:</strong> ${p.highlights.replace(/\|/g, ', ')}</div>`;
     if (p.audit_note && p.audit_note !== 'NA') html += `<div style="margin-top:4px;">${p.audit_note.replace(/\n/g,'<br>')}</div>`;
     html += '</div></details>';
@@ -486,7 +562,10 @@ function buildBreederList() {
     });
     div.querySelector('input').addEventListener('change', e => {
       const id = e.target.dataset.id;
-      if (e.target.checked) { selectedBreeders.push(id); }
+      if (e.target.checked) {
+        selectedBreeders.push(id);
+        trackEvent('breeder_select', { breeder_id: id, breeder_name: b.name });
+      }
       else { selectedBreeders = selectedBreeders.filter(x => x !== id); }
       applyBreederMode();
     });
@@ -596,6 +675,7 @@ function buildBreederModePopup(loc, matchedBreederIds) {
 // --- Mode Switch ---
 function switchMode(mode) {
   currentMode = mode;
+  trackEvent('mode_switch', { mode: mode });
   const locPanel = document.getElementById('location-panel');
   const brPanel = document.getElementById('breeder-panel');
   if (mode === 'location') {
@@ -628,12 +708,14 @@ if (sessionStorage.getItem('seed-map-verified')) {
 
 document.getElementById('gate-accept').addEventListener('click', () => {
   sessionStorage.setItem('seed-map-verified', 'true');
+  trackEvent('age_gate_accept', {});
   ageGate.classList.add('hidden');
   loader.style.display = '';
   initMap();
 });
 
 document.getElementById('gate-deny').addEventListener('click', () => {
+  trackEvent('age_gate_deny', {});
   window.location.href = 'https://google.com';
 });
 
@@ -662,6 +744,7 @@ function loadMapData(data) {
     if (p.state) states.add(p.state);
     const icon = p.online ? blueIcon : redIcon;
     const marker = L.marker([p.lat, p.lng], { icon }).bindPopup(() => buildPopup(p), { maxWidth: 320 });
+    marker.on('popupopen', () => trackEvent('popup_open', { business_name: p.name, type: p.type }));
     pins.push({ marker, data: p });
   });
 
@@ -678,7 +761,11 @@ function loadMapData(data) {
 
   document.getElementById('show-online').addEventListener('change', applyFilters);
   document.querySelectorAll('.type-filter').forEach(c => c.addEventListener('change', applyFilters));
-  document.getElementById('state-filter').addEventListener('change', applyFilters);
+  document.getElementById('state-filter').addEventListener('change', () => {
+    const val = document.getElementById('state-filter').value;
+    if (val) trackEvent('state_filter', { state: val });
+    applyFilters();
+  });
   document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', e => switchMode(e.target.value)));
   document.getElementById('breeder-search').addEventListener('input', filterBreederList);
 
@@ -721,6 +808,7 @@ function doSearch() {
 function pickFirst() { const f = searchResults.querySelector('.sr-item'); if (f) f.click(); }
 function flyToPin(marker, d) {
   searchResults.style.display = 'none';
+  trackEvent('search_select', { name: d.name, city: d.city, state: d.state });
   map.flyTo([d.lat, d.lng], 14, { duration: 1 });
   setTimeout(() => { cluster.zoomToShowLayer(marker, () => marker.openPopup()); }, 1100);
 }
@@ -729,6 +817,7 @@ document.addEventListener('click', e => { if (!e.target.closest('#search-wrap'))
 // --- Locate Me ---
 document.getElementById('locate-btn').addEventListener('click', function() {
   if (!navigator.geolocation) { alert('Geolocation not supported.'); return; }
+  trackEvent('locate_me', {});
   this.classList.add('locating');
   navigator.geolocation.getCurrentPosition(
     pos => {

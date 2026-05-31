@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /aws/
+
+Sitemap: https://seed-map.poweredbyci.live/sitemap.xml
