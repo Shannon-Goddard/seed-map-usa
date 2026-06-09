@@ -472,7 +472,18 @@ function buildPopup(p) {
     html += `<div class="popup-detail">📍 ${p.city}, ${p.state}</div>`;
   if (p.phone && p.phone !== 'NA') html += `<div class="popup-detail">📞 ${p.phone}</div>`;
   if (p.hours && p.hours !== 'NA') html += `<div class="popup-detail">🕐 ${p.hours}</div>`;
-  if (p.url && p.url !== 'NA') html += `<div class="popup-detail"><a href="${p.url}" target="_blank" onclick="trackEvent('outbound_link_click',{business_name:'${p.name.replace(/'/g,"\\'")}'  ,url:'${p.url}'})">🌐 Website</a></div>`;
+  if (p.url && p.url !== 'NA') {
+    const urls = p.url.split('|').map(u => u.trim()).filter(u => u);
+    if (urls.length === 1) {
+      html += `<div class="popup-detail"><a href="${urls[0]}" target="_blank" onclick="trackEvent('outbound_link_click',{business_name:'${p.name.replace(/'/g,"\\\'")}',url:'${urls[0]}'})">🌐 Website</a></div>`;
+    } else {
+      html += '<div class="popup-detail">🌐 ';
+      urls.forEach((u, i) => {
+        html += `<a href="${u}" target="_blank" onclick="trackEvent('outbound_link_click',{business_name:'${p.name.replace(/'/g,"\\\'")}',url:'${u}'})">${i === 0 ? 'Website' : 'Site ' + (i+1)}</a>${i < urls.length-1 ? ' · ' : ''}`;
+      });
+      html += '</div>';
+    }
+  }
 
   // Brands logos
   if (p.brands) {
