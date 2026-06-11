@@ -8,81 +8,98 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #333; line-height: 1.7; padding: 0; }
-.top-bar { position: sticky; top: 0; z-index: 100; background: #111; display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #333; line-height: 1.7; padding: 0; background: #fff; }
+.top-bar { position: sticky; top: 0; z-index: 100; background: #111; display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; opacity: 0.7;}
 .top-bar a { color: #04AA6D; text-decoration: none; font-size: 13px; font-weight: 600; }
-.top-bar a:hover { color: #fff; }
+.top-bar a:hover { color: #000; }
 .top-bar img { height: 18px; }
-.content { padding: 40px 20px; max-width: 720px; margin: 0 auto; }
-h1 { font-size: 24px; margin-bottom: 4px; }
-h2 { font-size: 20px; margin-top: 40px; margin-bottom: 16px; color: #111; }
+.content { padding: 40px 20px; max-width: 800px; margin: 0 auto; }
+h1 { font-size: 28px; color: #000; margin-bottom: 4px; }
+h2 { font-size: 20px; margin-top: 40px; margin-bottom: 20px; color: #000; }
 .subtitle { color: #888; font-size: 14px; margin-bottom: 32px; }
 a { color: #04AA6D; }
 
-/* Partner Cards */
-.partner-grid { display: flex; flex-direction: column; gap: 16px; }
-.partner-card {
-  display: flex; align-items: center; gap: 16px;
-  background: #f9f9f9; border: 1px solid #eee; border-radius: 12px;
-  padding: 20px; transition: border-color 0.2s;
+/* Breeder-style cards */
+.partner-list { display: flex; flex-direction: column; gap: 20px; }
+.partner-row {
+  position: relative; border-radius: 12px; overflow: hidden;
+  min-height: 180px; transition: transform 0.2s;
 }
-.partner-card:hover { border-color: #04AA6D; }
-.partner-card img {
-  width: 64px; height: 64px; object-fit: contain; border-radius: 8px;
-  background: #fff; padding: 4px; border: 1px solid #eee;
+.partner-row:hover { transform: translateY(-2px); }
+.partner-background {
+  position: absolute; inset: 0;
+  background-size: contain; background-position: center; background-repeat: no-repeat;
 }
-.partner-info { flex: 1; }
-.partner-info .partner-name { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
-.partner-info .partner-desc { font-size: 13px; color: #666; margin-bottom: 8px; }
-.partner-info .partner-link {
-  display: inline-block; padding: 6px 14px; background: #04AA6D; color: #fff;
-  border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none;
-  transition: background 0.2s;
+.partner-content {
+  position: relative; z-index: 1;
+  padding: 24px;
+  min-height: 192px; display: flex; flex-direction: column; justify-content: center;
 }
-.partner-info .partner-link:hover { background: #038857; }
-.affiliate-badge {
-  display: inline-block; font-size: 10px; color: #999; background: #f0f0f0;
-  padding: 2px 6px; border-radius: 3px; margin-left: 8px; vertical-align: middle;
+.partner-name {
+  font-size: 18px; font-weight: 700; color: #000; margin-bottom: 90px;
 }
+.partner-name .badge {
+  font-size: 10px; padding: 3px 8px; border-radius: 4px;
+  background: #04AA6D; color: #000; vertical-align: middle;
+}
+.partner-desc { font-size: 13px; color: #aaa; margin-bottom: 12px; }
+.partner-desc a { color: #04AA6D; }
+.partner-tagline { font-size: 12px; color: #666; font-style: italic; margin-bottom: 2px; }
+
+.seed-bank-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.seed-bank-btn {
+  display: inline-block; padding: 6px 14px;
+  border: 1px solid #04AA6D; border-radius: 6px;
+  color: #04AA6D; font-size: 12px; font-weight: 600;
+  text-decoration: none; transition: all 0.2s;
+}
+.seed-bank-btn:hover { background: #04AA6D; color: #000; }
 
 /* App Section */
-.app-section {
-  background: #111; border-radius: 12px; padding: 28px; margin-top: 16px;
-  display: flex; align-items: center; gap: 20px; color: #fff;
+.app-row {
+  position: relative; border-radius: 12px; overflow: hidden;
+  min-height: 160px;
 }
-.app-section img { width: 72px; height: 72px; border-radius: 16px; }
-.app-section .app-info { flex: 1; }
-.app-section .app-info h3 { font-size: 18px; margin-bottom: 4px; }
-.app-section .app-info p { font-size: 13px; color: #999; margin-bottom: 12px; }
+.app-content {
+  padding: 24px; background: rgba(4,170,109,0.08);
+  border: 1px solid #04AA6D; border-radius: 12px;
+  display: flex; align-items: center; gap: 20px;
+}
+.app-content img { width: 72px; height: 72px; border-radius: 16px; }
+.app-info { flex: 1; }
+.app-info h3 { font-size: 18px; color: #000; margin-bottom: 4px; }
+.app-info p { font-size: 13px; color: #999; margin-bottom: 12px; }
 .app-badges { display: flex; gap: 8px; flex-wrap: wrap; }
-.app-badges a img { height: 40px; width: auto; border-radius: 6px; }
+.app-badges a img { height: 40px; width: auto; border-radius: 6px; opacity: 0.7; }
+.app-badges a img:hover { opacity: 1.0; }
 
 /* CTA */
 .cta-box {
-  background: #f0faf5; border: 2px solid #04AA6D; border-radius: 12px;
-  padding: 24px; text-align: center; margin-top: 40px;
+  border: 2px solid #04AA6D; border-radius: 12px;
+  padding: 28px; text-align: center; margin-top: 40px;
 }
-.cta-box h3 { font-size: 18px; margin-bottom: 8px; }
-.cta-box p { font-size: 14px; color: #666; margin-bottom: 16px; }
+.cta-box h3 { font-size: 18px; margin-bottom: 8px; color: #000; }
+.cta-box p { font-size: 14px; color: #888; margin-bottom: 16px; }
 .cta-box a {
-  display: inline-block; padding: 10px 24px; background: #04AA6D; color: #fff;
+  display: inline-block; padding: 10px 24px; background: #04AA6D; color: #000;
   border-radius: 8px; font-weight: 600; text-decoration: none;
 }
 .cta-box a:hover { background: #038857; }
 
 /* Disclaimer */
 .affiliate-disclaimer {
-  margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;
-  font-size: 11px; color: #999; line-height: 1.6;
+  margin-top: 40px; padding-top: 20px; border-top: 1px solid #222;
+  font-size: 11px; color: #666; line-height: 1.6;
 }
+.affiliate-disclaimer a { color: #04AA6D; }
 
-footer { margin-top: 60px; padding: 16px 20px; background: #222; text-align: center; }
+footer { margin-top: 60px; padding: 16px 20px; background: #fff; text-align: center; opacity: 0.7;}
 footer .ci-badge { height: 2em; vertical-align: middle; }
-footer a { color: #ccc; text-decoration: none; font-size: 12px; }
+footer a { color: #111; text-decoration: none; font-size: 12px; }
 
 @media (max-width: 480px) {
-  .partner-card { flex-direction: column; text-align: center; }
-  .app-section { flex-direction: column; text-align: center; }
+  .partner-content { padding: 16px; }
+  .app-content { flex-direction: column; text-align: center; }
 }
 </style>
 </head>
@@ -98,49 +115,94 @@ footer a { color: #ccc; text-decoration: none; font-size: 12px; }
 <h1>Partners</h1>
 <p class="subtitle">Trusted seed sources and tools we recommend.</p>
 
-<h2>🌱 Seed Partners</h2>
+<div class="partner-list">
 
-<div class="partner-grid">
-  <div class="partner-card">
-    <img src="assets/logo/seedsman.png" alt="Seedsman">
-    <div class="partner-info">
-      <div class="partner-name">Seedsman <span class="affiliate-badge">Affiliate</span></div>
-      <div class="partner-desc">One of the world's largest online cannabis seed banks. Thousands of strains from 100+ breeders with worldwide shipping.</div>
-      <a class="partner-link" href="https://www.seedsman.com/?a_aid=6675f1c3ce128" target="_blank" rel="noopener sponsored">Shop Seedsman &rarr;</a>
+  <!-- 42 Fast Buds -->
+  <div class="partner-row">
+    <div class="partner-background" style="background-image: url('assets/affiliate-logo/42-fast-buds.png');"></div>
+    <div class="partner-content">
+      <h4 class="partner-name"><span class="badge">Affiliate</span></h4>
+      <p class="partner-tagline">Same Rebel Spirit</p>
+      <div class="seed-bank-buttons">
+        <a href="https://2fast4buds.com/?af=329747" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Shop 42 Fast Buds</a>
+      </div>
     </div>
   </div>
 
-  <div class="partner-card">
-    <img src="assets/logo/ilgm.png" alt="ILGM">
-    <div class="partner-info">
-      <div class="partner-name">ILGM <span class="affiliate-badge">Affiliate</span></div>
-      <div class="partner-desc">I Love Growing Marijuana — beginner-friendly seed bank with guaranteed germination, free US shipping, and grow guides.</div>
-      <a class="partner-link" href="https://ilgm.com/?aff=7215" target="_blank" rel="noopener sponsored">Shop ILGM &rarr;</a>
+  <!-- 420 Seeds -->
+  <div class="partner-row">
+    <div class="partner-background" style="background-image: url('assets/affiliate-logo/420-seeds.png');"></div>
+    <div class="partner-content">
+      <h4 class="partner-name"><span class="badge">Affiliate</span></h4>
+      <p class="partner-tagline">From seed to harvest</p>
+      <div class="seed-bank-buttons">
+        <a href="https://www.420-seeds.com" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Shop 420 Seeds</a>
+      </div>
     </div>
   </div>
 
-  <div class="partner-card">
-    <img src="assets/logo/seed-supreme.png" alt="Seed Supreme">
-    <div class="partner-info">
-      <div class="partner-name">Seed Supreme <span class="affiliate-badge">Affiliate</span></div>
-      <div class="partner-desc">Premium seed bank with curated genetics, stealth shipping, and a loyalty rewards program.</div>
-      <a class="partner-link" href="https://seedsupreme.com/?a_aid=loyal9" target="_blank" rel="noopener sponsored">Shop Seed Supreme &rarr;</a>
+  <!-- Alchimia -->
+  <div class="partner-row">
+    <div class="partner-background" style="background-image: url('assets/affiliate-logo/alchimia.png');"></div>
+    <div class="partner-content">
+      <h4 class="partner-name"><span class="badge">Affiliate</span></h4>
+      <p class="partner-tagline">Growing Happiness</p>
+      <div class="seed-bank-buttons">
+        <a href="https://www.alchimiaweb.com/en/seeds_selector.php?aff=B629EF277A86A59A24269BC9AA256704FC7481CE" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Shop Alchimia</a>
+        <a class="seed-bank-btn" target="_blank" rel="noopener sponsored">10% discount coupon: LOYAL9</a>
+      </div>
     </div>
   </div>
-</div>
 
-<h2>📱 Our App</h2>
-
-<div class="app-section">
-  <img src="assets/img/growapp-icon.png" alt="GrowApp" onerror="this.src='assets/img/favicon-32.png'">
-  <div class="app-info">
-    <h3>GrowApp | Cannabis App</h3>
-    <p>Track your grows, log nutrients, monitor schedules, and connect with the community. Available on iOS and Android.</p>
-    <div class="app-badges">
-      <a href="https://apps.apple.com/us/app/growapp-cannabis-app/id6751991099" target="_blank" rel="noopener"><img src="assets/img/app-store-badge.png" alt="App Store" onerror="this.outerHTML='<span style=\'background:#000;color:#fff;padding:8px 12px;border-radius:6px;font-size:12px;\'>App Store</span>'"></a>
-      <a href="https://play.google.com/store/apps/details?id=com.GrowAppCannabisGuide&pli=1" target="_blank" rel="noopener"><img src="assets/img/google-play-badge.png" alt="Google Play" onerror="this.outerHTML='<span style=\'background:#000;color:#fff;padding:8px 12px;border-radius:6px;font-size:12px;\'>Google Play</span>'"></a>
+  <!-- Amsterdam Seed Center -->
+  <div class="partner-row">
+    <div class="partner-background" style="background-image: url('assets/affiliate-logo/amsterdam-seed-center.png');"></div>
+    <div class="partner-content">
+      <h4 class="partner-name"><span class="badge">Affiliate</span></h4>
+      <p class="partner-tagline">Let's grow happiness together</p>
+      <div class="seed-bank-buttons">
+        <a href="https://2fast4buds.com/?af=329747" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Shop Amsterdam Seed Center</a>
+      </div>
     </div>
   </div>
+
+  <!-- Seed Supreme -->
+  <div class="partner-row">
+    <div class="partner-background" style="background-image: url('assets/affiliate-logo/seed-supreme.png');"></div>
+    <div class="partner-content">
+      <h4 class="partner-name"><span class="badge">Affiliate</span> Seed Supreme</h4>
+      <p class="partner-tagline">The best beans on the planet</p>
+      <div class="seed-bank-buttons">
+        <a href="https://seedsupreme.com/?a_aid=loyal9" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Shop Seed Supreme</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seedsman -->
+  <div class="partner-row">
+    <div class="partner-background" style="background-image: url('assets/affiliate-logo/seedsman.png');"></div>
+    <div class="partner-content">
+      <h4 class="partner-name"><span class="badge">Affiliate</span> Seedsman</h4>
+      <p class="partner-tagline">Where growing becomes a way of living</p>
+      <div class="seed-bank-buttons">
+        <a href="https://www.seedsman.com/?a_aid=6675f1c3ce128" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Shop Seedsman</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- GrowApp | Cannabis App -->
+  <div class="partner-row">
+    <div class="partner-background" style="background-image: url('assets/img/growapp-icon.png');"></div>
+    <div class="partner-content">
+      <h4 class="partner-name"><span class="badge">Affiliate</span> GrowApp | Cannabis App</h4>
+      <p class="partner-tagline">Grow what you can't</p>
+      <div class="app-badges">
+        <a href="https://apps.apple.com/us/app/growapp-cannabis-app/id6751991099" target="_blank" rel="noopener"><img src="assets/img/app-store-badge.png" alt="App Store" onerror="this.outerHTML='<span class=\'store-btn\'>App Store</span>'"></a>
+        <a href="https://play.google.com/store/apps/details?id=com.growappcannabiscannabis.guide&pli=1" target="_blank" rel="noopener"><img src="assets/img/google-play-badge.png" alt="Google Play" onerror="this.outerHTML='<span class=\'store-btn\'>Google Play</span>'"></a>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div class="cta-box">
