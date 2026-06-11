@@ -15,7 +15,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; c
 .top-bar img { height: 18px; }
 .content { padding: 40px 20px; max-width: 800px; margin: 0 auto; }
 h1 { font-size: 28px; color: #000; margin-bottom: 4px; }
-h2 { font-size: 20px; margin-top: 40px; margin-bottom: 20px; color: #000; }
 .subtitle { color: #888; font-size: 14px; margin-bottom: 32px; }
 a { color: #04AA6D; }
 
@@ -38,12 +37,8 @@ a { color: #04AA6D; }
 .partner-name {
   font-size: 18px; font-weight: 700; color: #000; margin-bottom: 0px;
 }
-.partner-name .badge {
-  font-size: 10px; padding: 3px 8px; border-radius: 4px;
-  background: #04AA6D; color: #000; vertical-align: middle;
-}
-.partner-desc { font-size: 13px; color: #aaa; margin-bottom: 12px; }
-.partner-desc a { color: #04AA6D; }
+
+
 .partner-tagline { font-size: 12px; color: #666; font-style: italic; margin-bottom: 2px; }
 
 .seed-bank-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -56,21 +51,8 @@ a { color: #04AA6D; }
 .seed-bank-btn:hover { background: #04AA6D; color: #000; }
 
 /* App Section */
-.app-row {
-  position: relative; border-radius: 12px; overflow: hidden;
-  min-height: 160px;
-}
-.app-content {
-  padding: 24px; background: rgba(4,170,109,0.08);
-  border: 1px solid #04AA6D; border-radius: 12px;
-  display: flex; align-items: center; gap: 20px;
-}
-.app-content img { width: 72px; height: 72px; border-radius: 16px; }
-.app-info { flex: 1; }
-.app-info h3 { font-size: 18px; color: #000; margin-bottom: 4px; }
-.app-info p { font-size: 13px; color: #999; margin-bottom: 12px; }
 .app-badges { display: flex; gap: 8px; flex-wrap: wrap; }
-.app-badges a img { height: 40px; width: auto; border-radius: 6px; opacity: 0.7; }
+.app-badges a img { height: 30px; width: auto; border-radius: 6px; opacity: 0.7; }
 .app-badges a img:hover { opacity: 1.0; }
 
 /* CTA */
@@ -113,7 +95,8 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
 <div class="content">
 
 <h1>Partners</h1>
-<p class="subtitle">Trusted seed sources and tools we recommend.</p>
+<p class="subtitle">Trusted seed sources and tools</p>
+<p style="font-size:12px;color:#888;margin-bottom:24px;"><i class="fas fa-leaf" style="color:#04AA6D;"></i> = Affiliate link — we may earn a commission at no cost to you. <a href="terms.html" style="font-size:11px;">Learn more</a></p>
 
 <div class="partner-list">
 
@@ -123,7 +106,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">Same Rebel Spirit</p>
       <div class="seed-bank-buttons">
-        <a href="https://2fast4buds.com/?af=329747" class="seed-bank-btn" target="_blank" rel="noopener sponsored">42 Fast Buds <small style="color:gray;">Affiliate</small></a>
+        <a href="https://2fast4buds.com/?af=329747" class="seed-bank-btn" target="_blank" rel="noopener sponsored">42 Fast Buds <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
       </div>
     </div>
   </div>
@@ -134,7 +117,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">From seed to harvest</p>
       <div class="seed-bank-buttons">
-        <a href="https://www.420-seeds.com" class="seed-bank-btn" target="_blank" rel="noopener sponsored">420 Seeds <small style="color:gray;">Affiliate</small></a>
+        <a href="https://www.420-seeds.com" class="seed-bank-btn" target="_blank" rel="noopener sponsored">420 Seeds <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
       </div>
     </div>
   </div>
@@ -145,7 +128,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">Growing Happiness</p>
       <div class="seed-bank-buttons">
-        <a href="https://www.alchimiaweb.com/en/seeds_selector.php?aff=B629EF277A86A59A24269BC9AA256704FC7481CE" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Alchimia <small style="color:gray;">Affiliate</small><br>10% discount coupon: LOYAL9</a>
+        <a href="https://www.alchimiaweb.com/en/seeds_selector.php?aff=B629EF277A86A59A24269BC9AA256704FC7481CE" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Alchimia <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i><br>10% discount coupon: LOYAL9</a>
       </div>
     </div>
   </div>
@@ -156,7 +139,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">Let's grow happiness together</p>
       <div class="seed-bank-buttons">
-        <a href="https://2fast4buds.com/?af=329747" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Amsterdam Seed Center <small style="color:gray;">Affiliate</small></a>
+        <a href="https://2fast4buds.com/?af=329747" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Amsterdam Seed Center <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
       </div>
     </div>
   </div>
@@ -167,7 +150,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">The best beans on the planet</p>
       <div class="seed-bank-buttons">
-        <a href="https://seedsupreme.com/?a_aid=loyal9" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Seed Supreme <small style="color:gray;">Affiliate</small></a>
+        <a href="https://seedsupreme.com/?a_aid=loyal9" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Seed Supreme <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
       </div>
     </div>
   </div>
@@ -178,7 +161,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">Where growing becomes a way of living</p>
       <div class="seed-bank-buttons">
-        <a href="https://www.seedsman.com/?a_aid=6675f1c3ce128" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Seedsman <small style="color:gray;">Affiliate</small></a>
+        <a href="https://www.seedsman.com/?a_aid=6675f1c3ce128" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Seedsman <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
       </div>
     </div>
   </div>
@@ -187,7 +170,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
   <div class="partner-row">
     <div class="partner-background" style="background-image: url('assets/affiliate-logo/growapp.png');"></div>
     <div class="partner-content">
-      <h4 class="partner-name">GrowApp | Cannabis App</h4>
+      <h4 class="partner-name">GrowApp<i class="fas fa-leaf" style="color:#04AA6D;"></i></h4>
       <p class="partner-tagline">Grow what you can't</p>
       <div class="app-badges">
         <a href="https://apps.apple.com/us/app/growapp-cannabis-app/id6751991099" target="_blank" rel="noopener"><img src="assets/img/app-store-badge.png" alt="App Store" onerror="this.outerHTML='<span class=\'store-btn\'>App Store</span>'"></a>
