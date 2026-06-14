@@ -15,8 +15,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; c
 .top-bar img { height: 18px; }
 .content { padding: 40px 20px; max-width: 800px; margin: 0 auto; }
 h1 { font-size: 28px; color: #000; margin-bottom: 4px; }
-.subtitle { color: #888; font-size: 14px; margin-bottom: 32px; }
+.subtitle { color: #888; font-size: 14px; margin-bottom: 16px; }
 a { color: #04AA6D; }
+
+/* Filter Toggle */
+.filter-toggle { display: flex; gap: 0; margin-bottom: 20px; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; width: fit-content; }
+.filter-btn { text-align: center; padding: 6px 16px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #666; }
+.filter-btn input { display: none; }
+.filter-btn.active { background: #04AA6D; color: #fff; }
 
 /* Breeder-style cards */
 .partner-list { display: flex; flex-direction: column; gap: 20px; }
@@ -105,12 +111,19 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
 
 <h1>Partners</h1>
 <p class="subtitle">Trusted seed sources and tools</p>
+
+<div class="filter-toggle">
+  <label class="filter-btn active" data-filter="all"><input type="radio" name="pfilter" value="all" checked> All</label>
+  <label class="filter-btn" data-filter="breeder"><input type="radio" name="pfilter" value="breeder"> Breeder</label>
+  <label class="filter-btn" data-filter="bank"><input type="radio" name="pfilter" value="bank"> Bank</label>
+</div>
+
 <p style="font-size:12px;color:#888;margin-bottom:24px;"><i class="fas fa-leaf" style="color:#04AA6D;"></i> = Affiliate link — we may earn a commission at no cost to you. <a href="terms.html" style="font-size:11px;">Learn more</a></p>
 
 <div class="partner-list">
 
   <!-- 42 Fast Buds -->
-  <div class="partner-row">
+  <div class="partner-row" data-type="breeder">
     <div class="partner-background" style="background-image: url('assets/affiliate-logo/42-fast-buds.png');"></div>
     <div class="partner-content">
       <p class="partner-tagline">Same Rebel Spirit</p>
@@ -122,7 +135,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
   </div>
 
   <!-- Alchimia -->
-  <div class="partner-row">
+  <div class="partner-row" data-type="bank">
     <div class="partner-background" style="background-image: url('assets/affiliate-logo/alchimia.png');"></div>
     <div class="partner-content">
       <p class="partner-tagline">Growing Happiness</p>
@@ -134,7 +147,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
   </div>
 
   <!-- Amsterdam Seed Center -->
-  <div class="partner-row">
+  <div class="partner-row" data-type="bank">
     <div class="partner-background" style="background-image: url('assets/affiliate-logo/amsterdam-seed-center.png');"></div>
     <div class="partner-content">
       <p class="partner-tagline">Let's grow happiness together</p>
@@ -146,7 +159,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
   </div>
 
   <!-- Seedsman -->
-  <div class="partner-row">
+  <div class="partner-row" data-type="bank">
     <div class="partner-background" style="background-image: url('assets/affiliate-logo/seedsman.png');"></div>
     <div class="partner-content">
       <p class="partner-tagline">Where growing becomes a way of living</p>
@@ -158,7 +171,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
   </div>
 
   <!-- GrowApp | Cannabis App -->
-  <div class="partner-row">
+  <div class="partner-row" data-type="app">
     <div class="partner-background" style="background-image: url('assets/affiliate-logo/growapp.png');"></div>
     <div class="partner-content">
       <p class="partner-tagline">Grow what you can't</p>
@@ -185,5 +198,25 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
 
 <footer id="site-footer"></footer>
 <script src="footer.js"></script>
+<script>
+const filterBtns = document.querySelectorAll('.filter-btn');
+const partnerRows = document.querySelectorAll('.partner-row');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    partnerRows.forEach(row => {
+      const type = row.dataset.type;
+      if (filter === 'all' || type === filter || type === 'app') {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+});
+</script>
 </body>
 </html>
