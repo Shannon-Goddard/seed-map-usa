@@ -49,10 +49,19 @@ a { color: #04AA6D; }
   text-decoration: none; transition: all 0.2s;
 }
 .seed-bank-btn:hover { background: #04AA6D; color: #000; }
+.promo-code {
+  display: inline-block; padding: 6px 14px;
+  border: 1px dashed #04AA6D; border-radius: 6px;
+  background: rgba(4,170,109,0.25); color: #04AA6D;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+  cursor: pointer; transition: all 0.2s; position: relative;
+}
+.promo-code:hover { background: rgba(4,170,109,0.5); }
+.promo-code .code { font-family: monospace; font-weight: 700; color: #fff; }
 
 /* App Section */
 .app-badges { display: flex; gap: 8px; flex-wrap: wrap; }
-.app-badges a img { height: 30px; width: auto; border-radius: 6px; opacity: 0.7; }
+.app-badges a img { height: 33px; width: auto; border-radius: 6px; opacity: 0.7; }
 .app-badges a img:hover { opacity: 1.0; }
 
 /* CTA */
@@ -128,7 +137,8 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">Growing Happiness</p>
       <div class="seed-bank-buttons">
-        <a href="https://www.alchimiaweb.com/en/seeds_selector.php?aff=B629EF277A86A59A24269BC9AA256704FC7481CE" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Alchimia <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i><br>10% discount coupon: LOYAL9</a>
+        <a href="https://www.alchimiaweb.com/en/seeds_selector.php?aff=B629EF277A86A59A24269BC9AA256704FC7481CE" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Alchimia <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
+        <span class="promo-code" onclick="navigator.clipboard.writeText('LOYAL9');this.querySelector('.code').textContent='Copied!';setTimeout(()=>this.querySelector('.code').textContent='LOYAL9',1500)">10% off: <span class="code">LOYAL9</span></span>
       </div>
     </div>
   </div>
@@ -139,18 +149,7 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">Let's grow happiness together</p>
       <div class="seed-bank-buttons">
-        <a href="https://2fast4buds.com/?af=329747" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Amsterdam Seed Center <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Seed Supreme -->
-  <div class="partner-row">
-    <div class="partner-background" style="background-image: url('assets/affiliate-logo/seed-supreme.png');"></div>
-    <div class="partner-content">
-      <p class="partner-tagline">The best beans on the planet</p>
-      <div class="seed-bank-buttons">
-        <a href="https://seedsupreme.com/?a_aid=loyal9" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Seed Supreme <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
+        <a href="https://www.amsterdamseedcenter.com/en/cannabis-seeds?affiliate_code=F8ezyFcOGg&referring_service=link" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Amsterdam Seed Center <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
       </div>
     </div>
   </div>
@@ -161,7 +160,8 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
     <div class="partner-content">
       <p class="partner-tagline">Where growing becomes a way of living</p>
       <div class="seed-bank-buttons">
-        <a href="https://www.seedsman.com/?a_aid=6675f1c3ce128" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Seedsman <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
+        <a href="https://www.seedsman.com/us-en/cannabis-seed-breeders?a_aid=6675f1c3ce128" class="seed-bank-btn" target="_blank" rel="noopener sponsored">Seedsman <i class="fas fa-leaf" style="color:#04AA6D;font-size:10px;"></i></a>
+        <span class="promo-code">10% off first order!<span class="code"></span></span>
       </div>
     </div>
   </div>
@@ -170,7 +170,6 @@ footer a { color: #111; text-decoration: none; font-size: 12px; }
   <div class="partner-row">
     <div class="partner-background" style="background-image: url('assets/affiliate-logo/growapp.png');"></div>
     <div class="partner-content">
-      <h4 class="partner-name">GrowApp<i class="fas fa-leaf" style="color:#04AA6D;"></i></h4>
       <p class="partner-tagline">Grow what you can't</p>
       <div class="app-badges">
         <a href="https://apps.apple.com/us/app/growapp-cannabis-app/id6751991099" target="_blank" rel="noopener"><img src="assets/img/app-store-badge.png" alt="App Store" onerror="this.outerHTML='<span class=\'store-btn\'>App Store</span>'"></a>
