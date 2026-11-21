@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Listed — Find Seeds</title>
+  <meta name="description" content="List your seed bank or breeder on Find Seeds. Reach growers searching 42,000+ strains across 137 vendors." />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon-16.png" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch.png" />
+  <link rel="manifest" href="../site.webmanifest" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <!-- Google Tag Manager -->
+  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NX38C59R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  </script>
+  <button id="menu-btn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  <div id="menu-overlay"></div>
+  <div id="menu-panel">
+    <button id="menu-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <div class="menu-header">
+      <img src="../assets/img/ci-badge-color.svg" alt="CI" />
+      <span>Find Seeds</span>
+    </div>
+    <nav>
+      <a href="../index.html"><i class="fa-solid fa-magnifying-glass"></i> Strain Search</a>
+      <a href="about.html"><i class="fa-solid fa-circle-info"></i> About</a>
+      <a href="get-listed.html"><i class="fa-solid fa-store"></i> Get Listed</a>
+      <a href="submit-bank.html"><i class="fa-solid fa-plus-circle"></i> Submit a Bank</a>
+      <a href="contact.html"><i class="fa-solid fa-envelope"></i> Contact</a>
+      <a href="attributions.html"><i class="fa-solid fa-scale-balanced"></i> Attributions</a>
+      <a href="https://github.com/Shannon-Goddard" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+      <a href="https://buymeacoffee.com/loyal9" target="_blank" class="beer-link"><i class="fa-solid fa-mug-hot"></i> Buy the Dev a Beer</a>
+    </nav>
+    <div class="menu-legal">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="disclosure.html">Disclosure</a>
+    </div>
+  </div>
+
+  <header>
+    <a href="../index.html" class="header-logo">
+      <img src="../assets/img/ci-badge-color.svg" alt="CI" />
+      <span>Find Seeds</span>
+    </a>
+  </header>
+
+  <main>
+    <div class="page-content">
+      <h1><i class="fa-solid fa-store"></i> Get Your Bank Listed</h1>
+      <p>Find Seeds indexes 42,000+ strains across 137 vendors. If your bank or breeder isn't showing up, get listed — free. Growers are already searching for your genetics.</p>
+
+      <div class="listing-tiers">
+        <div class="tier-card">
+          <div class="tier-header">
+            <i class="fa-solid fa-seedling"></i>
+            <h2>Basic Listing</h2>
+            <span class="tier-price">Free</span>
+          </div>
+          <ul>
+            <li><i class="fa-solid fa-check"></i> Appear in strain search results</li>
+            <li><i class="fa-solid fa-check"></i> Vendor card with your logo</li>
+            <li><i class="fa-solid fa-check"></i> Shipping, payment &amp; guarantee info</li>
+            <li><i class="fa-solid fa-check"></i> Direct links to your product pages</li>
+          </ul>
+          <p class="tier-note">Submit the quick form below or download our CSV template to submit your full catalog.</p>
+        </div>
+        <div class="tier-card tier-featured">
+          <div class="tier-header">
+            <i class="fa-solid fa-star"></i>
+            <h2>Featured</h2>
+            <span class="tier-price">Partner</span>
+          </div>
+          <ul>
+            <li><i class="fa-solid fa-check"></i> Everything in Basic</li>
+            <li><i class="fa-solid fa-check"></i> ✅ Verified badge on your vendor card</li>
+            <li><i class="fa-solid fa-check"></i> Priority placement in results</li>
+            <li><i class="fa-solid fa-check"></i> Listed on our partner network</li>
+            <li><i class="fa-solid fa-check"></i> Affiliate link integration</li>
+          </ul>
+          <p class="tier-note">Interested in a partnership? Select "Partnership" in the form below.</p>
+        </div>
+      </div>
+
+      <h2><i class="fa-solid fa-file-csv"></i> Option 1 — Submit Your Catalog via CSV</h2>
+      <p>Have a large catalog? Download our template, fill it in, and attach it to the form below. One row per strain/product. We'll review and import it directly.</p>
+
+      <div class="csv-download">
+        <a href="../assets/data/vendor-submission-template.csv" download class="buy-btn" style="display:inline-flex;align-items:center;gap:8px;width:auto;padding:10px 20px;">
+          <i class="fa-solid fa-download"></i> Download CSV Template
+        </a>
+      </div>
+
+      <div class="schema-table">
+        <table>
+          <thead>
+            <tr><th>Column</th><th>Description</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>vendor_name</td><td>Your bank/store name</td><td>Seed Cellar</td></tr>
+            <tr><td>vendor_url</td><td>Your homepage URL</td><td>https://seedcellar.com</td></tr>
+            <tr><td>strain_name</td><td>Strain name only (no pack size)</td><td>Blue Dream</td></tr>
+            <tr><td>breeder</td><td>Who bred the genetics</td><td>DJ Short</td></tr>
+            <tr><td>product_type</td><td>feminized | auto | regular | cbd</td><td>feminized</td></tr>
+            <tr><td>product_url</td><td>Direct link to this product</td><td>https://yoursite.com/blue-dream</td></tr>
+            <tr><td>price_min</td><td>Lowest pack price (number only)</td><td>45</td></tr>
+            <tr><td>price_max</td><td>Highest pack price (number only)</td><td>90</td></tr>
+            <tr><td>currency_type</td><td>usd | eur | gbp | cad</td><td>usd</td></tr>
+            <tr><td>payment_methods</td><td>Pipe-separated list</td><td>credit card|crypto|cash</td></tr>
+            <tr><td>germ_guarantee</td><td>yes | no</td><td>yes</td></tr>
+            <tr><td>shipping_regions</td><td>Pipe-separated: usa|international|eu|uk</td><td>usa|international</td></tr>
+            <tr><td>stealth_shipping</td><td>yes | no</td><td>yes</td></tr>
+            <tr><td>in_stock</td><td>TRUE | FALSE</td><td>TRUE</td></tr>
+            <tr><td>loyalty_program</td><td>Program name or "no"</td><td>no</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2><i class="fa-solid fa-paper-plane"></i> Option 2 — Quick Form</h2>
+      <p>Just getting started or only have a few strains? Fill this out and we'll follow up.</p>
+
+      <form id="vendor-form" action="https://formspree.io/f/mpqnepoe" method="POST">
+        <input type="hidden" name="_subject" value="Find Seeds — Vendor Listing Request" />
+        <input type="text" name="_gotcha" style="display:none" />
+        <div class="form-group">
+          <label for="v-type">Inquiry Type *</label>
+          <select id="v-type" name="inquiry_type" required>
+            <option value="">Select...</option>
+            <option value="Basic Listing">Basic Listing (Free)</option>
+            <option value="Partnership">Partnership / Featured</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="v-name">Bank / Breeder Name *</label>
+          <input type="text" id="v-name" name="vendor_name" required placeholder="e.g. Exotic Genetix" />
+        </div>
+        <div class="form-group">
+          <label for="v-url">Website URL *</label>
+          <input type="url" id="v-url" name="vendor_url" required placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label for="v-email">Your Email *</label>
+          <input type="email" id="v-email" name="email" required placeholder="you@yourbank.com" />
+        </div>
+        <div class="form-group">
+          <label for="v-ships">Ships To</label>
+          <input type="text" id="v-ships" name="shipping_regions" placeholder="e.g. USA, International, EU" />
+        </div>
+        <div class="form-group">
+          <label for="v-payment">Payment Methods</label>
+          <input type="text" id="v-payment" name="payment_methods" placeholder="e.g. Credit Card, Bitcoin, Cash" />
+        </div>
+        <div class="form-group">
+          <label for="v-guarantee">Germination Guarantee</label>
+          <input type="text" id="v-guarantee" name="germ_guarantee" placeholder="e.g. 90% Germination, Case-by-case" />
+        </div>
+        <div class="form-group">
+          <label for="v-notes">Anything else we should know?</label>
+          <textarea id="v-notes" name="notes" placeholder="Catalog size, affiliate interest, promo codes..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="v-submit">
+          <i class="fa-solid fa-paper-plane"></i> Submit
+        </button>
+      </form>
+
+      <div id="vendor-success" class="hidden" style="text-align:center;padding:40px 0;">
+        <i class="fa-solid fa-circle-check" style="font-size:3rem;color:var(--accent);display:block;margin-bottom:12px;"></i>
+        <h2 style="margin-bottom:8px;">Got it!</h2>
+        <p style="color:var(--text-dim);">We'll review your submission and be in touch within a few days. <a href="../index.html">Back to search</a>.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="privacy.html">Privacy</a> &middot;
+      <a href="terms.html">Terms</a> &middot;
+      <a href="disclosure.html">Disclosure</a> &middot;
+      <a href="contact.html">Contact</a> &middot;
+      <a href="attributions.html">Attributions</a>
+    </p>
+    <p>&copy; 2026 <a href="https://loyal9.com" target="_blank">Loyal9 LLC</a> &middot; Built for home growers.</p>
+  </footer>
+
+  <div class="ci-watermark"><img src="../assets/img/ci-badge-color.svg" alt="CI" /></div>
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const menuPanel = document.getElementById('menu-panel');
+    const menuOverlay = document.getElementById('menu-overlay');
+    const menuClose = document.getElementById('menu-close');
+    menuBtn.addEventListener('click', () => { menuPanel.classList.add('open'); menuOverlay.classList.add('open'); });
+    menuOverlay.addEventListener('click', () => { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); });
+    menuClose.addEventListener('click', () => { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); } });
+
+    const form = document.getElementById('vendor-form');
+    const success = document.getElementById('vendor-success');
+    const btn = document.getElementById('v-submit');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
+        if (res.ok) { form.style.display = 'none'; success.classList.remove('hidden'); }
+        else { btn.textContent = 'Error — try again'; btn.disabled = false; }
+      } catch { btn.textContent = 'Error — try again'; btn.disabled = false; }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Seeds — Cannabis Strain & Seed Bank Search | CI Seed Map</title>
+  <meta name="description" content="Search 42,000+ cannabis strains across 137 seed banks. Filter by type, shipping region, payment method and more.">
+  <meta property="og:title" content="Find Seeds — Cannabis Strain & Seed Bank Search">
+  <meta property="og:description" content="Search 42,000+ cannabis strains across 137 seed banks. Filter by type, shipping, and payment method.">
+  <meta property="og:image" content="https://seed-map.poweredbyci.live/assets/img/preview.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://seed-map.poweredbyci.live/find-seeds/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Find Seeds — Cannabis Strain & Seed Bank Search">
+  <meta name="twitter:description" content="Search 42,000+ cannabis strains across 137 seed banks.">
+  <meta name="twitter:image" content="https://seed-map.poweredbyci.live/assets/img/preview.png">
+  <link rel="canonical" href="https://seed-map.poweredbyci.live/find-seeds/">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon-16.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch.png">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8M4SQXW0TH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-8M4SQXW0TH');
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <button id="menu-btn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  <div id="menu-overlay"></div>
+  <div id="menu-panel">
+    <button id="menu-close" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+    <div class="menu-header">
+      <img src="../assets/img/ci-badge-color.svg" alt="CI">
+      <span>Seed Map</span>
+    </div>
+    <nav>
+      <a href="../index.html"><i class="fa-solid fa-map"></i> Map</a>
+      <a href="../mission.html"><i class="fa-solid fa-bullseye"></i> Mission</a>
+      <a href="index.html"><i class="fa-solid fa-seedling"></i> Find Seeds</a>
+      <a href="../contact.html"><i class="fa-solid fa-envelope"></i> Contact</a>
+      <a href="https://github.com/Shannon-Goddard/seed-map-usa" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+    </nav>
+    <div class="menu-legal">
+      <a href="../privacy.html">Privacy</a>
+      <a href="../terms.html">Terms</a>
+      <a href="../disclaimer.html">Disclaimer</a>
+    </div>
+  </div>
+
+  <header>
+    <a href="../index.html" class="header-logo">
+      <img src="../assets/img/ci-badge-color.svg" alt="CI" />
+      <span>Find Seeds</span>
+    </a>
+
+  </header>
+
+  <main>
+
+    <!-- Loading state -->
+    <div id="loading-state" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading strain data...</p>
+    </div>
+
+    <div class="search-bar" id="search-wrap" style="display:none">
+      <input type="text" id="strain-search" placeholder="Search strains..." autocomplete="off" />
+    </div>
+
+    <div class="filters" id="filters-wrap" style="display:none">
+      <div class="filter-group">
+        <span class="filter-label">Type</span>
+        <button class="filter-btn" data-filter="type" data-value="feminized">Feminized</button>
+        <button class="filter-btn" data-filter="type" data-value="auto">Auto</button>
+        <button class="filter-btn" data-filter="type" data-value="regular">Regular</button>
+        <button class="filter-btn" data-filter="type" data-value="cbd">CBD</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Ships To</span>
+        <button class="filter-btn" data-filter="shipping" data-value="usa">USA</button>
+        <button class="filter-btn" data-filter="shipping" data-value="international">International</button>
+        <button class="filter-btn" data-filter="shipping" data-value="eu">EU</button>
+        <button class="filter-btn" data-filter="shipping" data-value="uk">UK</button>
+      </div>
+    </div>
+
+    <!-- Level 1: Strain search dropdown -->
+    <div id="strain-list" class="strain-list hidden"></div>
+
+    <!-- Level 2: Vendor list -->
+    <section id="bank-section" class="bank-section hidden">
+      <div class="bank-section-header">
+        <img id="selected-strain-img" src="" alt="" />
+        <div>
+          <h2 id="selected-strain-name"></h2>
+        </div>
+        <button id="share-btn" class="share-btn" title="Copy share link">
+          <i class="fa-solid fa-link"></i> Share
+        </button>
+        <span id="share-confirm" class="share-confirm hidden"><i class="fa-solid fa-check"></i> Copied!</span>
+      </div>
+      <div class="quick-filters">
+        <span class="filter-label">Quick</span>
+        <button class="quick-btn" data-quick="usa"><i class="fa-solid fa-flag-usa"></i> Ships USA</button>
+        <button class="quick-btn" data-quick="crypto"><i class="fa-brands fa-bitcoin"></i> Crypto</button>
+        <button class="quick-btn" data-quick="guarantee"><i class="fa-solid fa-shield-halved"></i> Germ Guarantee</button>
+        <button class="quick-btn" data-quick="stealth"><i class="fa-solid fa-user-secret"></i> Stealth</button>
+      </div>
+      <div id="bank-grid" class="bank-grid"></div>
+    </section>
+
+    <p class="affiliate-disclaimer">Some links on this site are affiliate links. We may earn a commission at no extra cost to you. <a href="pages/disclosure.html">Learn more</a>.</p>
+
+    <div class="get-listed-cta">
+      <span>Don't see your bank?</span>
+      <a href="pages/get-listed.html"><i class="fa-solid fa-store"></i> Get Listed — it's free</a>
+    </div>
+
+  </main>
+
+  <!-- Level 3: SKU Modal -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div class="modal-header">
+        <img id="modal-bank-logo" src="" alt="" />
+        <div>
+          <h3 id="modal-bank-name"></h3>
+          <p id="modal-product-type"></p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p id="modal-lineage"></p>
+        <div class="modal-row">
+          <i class="fa-solid fa-truck-fast"></i>
+          <span class="modal-label">Ships to:</span>
+          <span id="modal-shipping"></span>
+        </div>
+        <div class="modal-row">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span class="modal-label">Guarantee:</span>
+          <span id="modal-guarantee"></span>
+        </div>
+        <div class="modal-row">
+          <i class="fa-solid fa-user-secret"></i>
+          <span class="modal-label">Stealth:</span>
+          <span id="modal-stealth"></span>
+        </div>
+        <div class="modal-row">
+          <i class="fa-solid fa-gift"></i>
+          <span class="modal-label">Loyalty:</span>
+          <span id="modal-loyalty"></span>
+        </div>
+        <div class="modal-row">
+          <i class="fa-solid fa-credit-card"></i>
+          <span class="modal-label">Payment:</span>
+          <span id="modal-payment" class="payment-icons"></span>
+        </div>
+        <div class="modal-row">
+          <i class="fa-solid fa-tag"></i>
+          <span class="modal-label">Price:</span>
+          <span id="modal-price"></span>
+        </div>
+      </div>
+      <a id="modal-buy-btn" href="#" target="_blank" class="buy-btn">Buy Now</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>
+      <a href="pages/privacy.html">Privacy</a> &middot;
+      <a href="pages/terms.html">Terms</a> &middot;
+      <a href="pages/disclosure.html">Disclosure</a> &middot;
+      <a href="pages/contact.html">Contact</a> &middot;
+      <a href="pages/attributions.html">Attributions</a>
+    </p>
+    <p>&copy; 2026 <a href="https://loyal9.com" target="_blank">Loyal9 LLC</a> &middot; Built for home growers.</p>
+  </footer>
+
+  <div class="ci-watermark"><img src="../assets/img/ci-badge-color.svg" alt="CI" /></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

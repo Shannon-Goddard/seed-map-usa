@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit a Bank — Find Seeds</title>
+  <meta name="description" content="Submit a missing seed bank or breeder to Find Seeds." />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon-16.png" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch.png" />
+  <link rel="manifest" href="../site.webmanifest" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <!-- Google Tag Manager -->
+  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NX38C59R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  </script>
+  <button id="menu-btn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  <div id="menu-overlay"></div>
+  <div id="menu-panel">
+    <button id="menu-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <div class="menu-header">
+      <img src="../assets/img/ci-badge-color.svg" alt="CI" />
+      <span>Find Seeds</span>
+    </div>
+    <nav>
+      <a href="../index.html"><i class="fa-solid fa-magnifying-glass"></i> Strain Search</a>
+      <a href="about.html"><i class="fa-solid fa-circle-info"></i> About</a>
+      <a href="get-listed.html"><i class="fa-solid fa-store"></i> Get Listed</a>
+      <a href="submit-bank.html"><i class="fa-solid fa-plus-circle"></i> Submit a Bank</a>
+      <a href="contact.html"><i class="fa-solid fa-envelope"></i> Contact</a>
+      <a href="attributions.html"><i class="fa-solid fa-scale-balanced"></i> Attributions</a>
+      <a href="https://github.com/Shannon-Goddard" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+      <a href="https://buymeacoffee.com/loyal9" target="_blank" class="beer-link"><i class="fa-solid fa-mug-hot"></i> Buy the Dev a Beer</a>
+    </nav>
+    <div class="menu-legal">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="disclosure.html">Disclosure</a>
+    </div>
+  </div>
+
+  <header>
+    <a href="../index.html" class="header-logo">
+      <img src="../assets/img/ci-badge-color.svg" alt="CI" />
+      <span>Find Seeds</span>
+    </a>
+  </header>
+
+  <main>
+    <div class="page-content">
+      <h1><i class="fa-solid fa-plus-circle"></i> Submit a Seed Bank</h1>
+      <p>Know a seed bank or breeder that's missing from our database? Fill out the form below and we'll review it for inclusion.</p>
+
+      <form action="https://formspree.io/f/mpqnepoe" method="POST">
+        <input type="hidden" name="_subject" value="Find Seeds — Bank Submission" />
+        <div class="form-group">
+          <label for="bank-name">Bank / Breeder Name *</label>
+          <input type="text" id="bank-name" name="bank_name" required placeholder="e.g. Exotic Genetix" />
+        </div>
+        <div class="form-group">
+          <label for="bank-url">Website URL *</label>
+          <input type="url" id="bank-url" name="bank_url" required placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label for="ships-to">Ships To</label>
+          <input type="text" id="ships-to" name="ships_to" placeholder="e.g. USA, International, EU" />
+        </div>
+        <div class="form-group">
+          <label for="payment">Payment Methods</label>
+          <input type="text" id="payment" name="payment" placeholder="e.g. Credit Card, Bitcoin, Cash" />
+        </div>
+        <div class="form-group">
+          <label for="notes">Additional Notes</label>
+          <textarea id="notes" name="notes" placeholder="Anything else we should know..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="your-email">Your Email (optional — for follow-up)</label>
+          <input type="email" id="your-email" name="email" placeholder="you@example.com" />
+        </div>
+        <button type="submit" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Submit</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="privacy.html">Privacy</a> &middot;
+      <a href="terms.html">Terms</a> &middot;
+      <a href="disclosure.html">Disclosure</a> &middot;
+      <a href="contact.html">Contact</a> &middot;
+      <a href="attributions.html">Attributions</a>
+    </p>
+    <p>&copy; 2026 <a href="https://loyal9.com" target="_blank">Loyal9 LLC</a> &middot; Built for home growers.</p>
+  </footer>
+
+  <div class="ci-watermark"><img src="../assets/img/ci-badge-color.svg" alt="CI" /></div>
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const menuPanel = document.getElementById('menu-panel');
+    const menuOverlay = document.getElementById('menu-overlay');
+    const menuClose = document.getElementById('menu-close');
+    menuBtn.addEventListener('click', () => { menuPanel.classList.add('open'); menuOverlay.classList.add('open'); });
+    menuOverlay.addEventListener('click', () => { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); });
+    menuClose.addEventListener('click', () => { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); } });
+  </script>
+</body>
+</html>
