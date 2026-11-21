@@ -105,10 +105,10 @@ function renderDropdown(query) {
     return;
   }
 
-  list.innerHTML = matches.map(g => {
+  list.innerHTML = matches.map((g, i) => {
     const vendorCount = [...new Set(g.rows.map(r => r.vendor_name))].length;
     return `
-      <div class="strain-item" data-key="${g.group || slugify(g.displayName)}">
+      <div class="strain-item" data-idx="${i}">
         <img src="${g.imgPath}" alt="${g.displayName}" onerror="this.style.display='none'" />
         <div class="strain-item-info">
           <div class="strain-item-name">${g.displayName}</div>
@@ -121,9 +121,7 @@ function renderDropdown(query) {
 
   list.querySelectorAll('.strain-item').forEach(el => {
     el.addEventListener('click', () => {
-      const key = el.dataset.key;
-      const match = Object.values(strainGroups).find(g => (g.group || slugify(g.displayName)) === key);
-      if (match) selectGroup(match);
+      selectGroup(matches[+el.dataset.idx]);
     });
   });
 }
@@ -207,7 +205,7 @@ function renderVendorSection() {
       <div class="vendor-row" data-vendor="${vendorName}">
         <div class="vendor-row-header">
           <div class="vendor-row-logo-wrap">
-            <img class="vendor-row-img" src="../assets/img/company/${slug}.png" alt="${vendorName}"
+            <img class="vendor-row-img" src="assets/img/company/${slug}.png" alt="${vendorName}"
               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
             <div class="vendor-initials" style="display:none">${initials(vendorName)}</div>
           </div>
@@ -269,7 +267,7 @@ function openSkuModal(r) {
   document.getElementById('modal-product-type').textContent = [r.product_type, r.pack_size].filter(Boolean).join(' · ');
 
   const logoEl = document.getElementById('modal-bank-logo');
-  logoEl.src = `../assets/img/company/${slugify((r.vendor_name || '').split('|')[0].trim())}.png`;
+  logoEl.src = `assets/img/company/${slugify((r.vendor_name || '').split('|')[0].trim())}.png`;
   logoEl.onerror = () => logoEl.style.display = 'none';
 
   // Strain image in modal header
@@ -366,15 +364,7 @@ function loadFromURL() {
   }
 }
 
-// ── Hamburger ─────────────────────────────────────────────────────────────────
-const menuBtn     = document.getElementById('menu-btn');
-const menuPanel   = document.getElementById('menu-panel');
-const menuOverlay = document.getElementById('menu-overlay');
-const menuClose   = document.getElementById('menu-close');
-menuBtn.addEventListener('click',     () => { menuPanel.classList.add('open'); menuOverlay.classList.add('open'); });
-menuOverlay.addEventListener('click', () => { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); });
-menuClose.addEventListener('click',   () => { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); });
-document.addEventListener('keydown',  e  => { if (e.key === 'Escape') { menuPanel.classList.remove('open'); menuOverlay.classList.remove('open'); } });
+
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 Papa.parse('assets/data/seeds.csv', {
@@ -382,6 +372,9 @@ Papa.parse('assets/data/seeds.csv', {
   header: true,
   skipEmptyLines: true,
   complete({ data }) {
+    data.forEach(r => {
+      if (r.img_path) r.img_path = '../medium-feeding/assets/strain-img/' + r.img_path.replace(/^.*\//, '');
+    });
     allRows      = data;
     strainGroups = buildStrainGroups(data);
     document.getElementById('loading-state').style.display  = 'none';
